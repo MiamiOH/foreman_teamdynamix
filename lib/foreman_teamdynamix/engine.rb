@@ -15,8 +15,8 @@ module ForemanTeamdynamix
         security_block :foreman_teamdynamix do
           permission :view_hosts,
                      { :hosts => [:new_action] },
-                      :resource_type => 'Host'         
-        end        
+                     :resource_type => 'Host'
+        end
       end
     end
 
@@ -26,7 +26,7 @@ module ForemanTeamdynamix
         HostsHelper.send(:include, ForemanCustomTab::HostsHelperExtensions)
         ::HostsController.send(:include,
                                ForemanCustomTab::HostsControllerExtensions)
-      rescue => e
+      rescue StandardError => e
         Rails.logger.warn "ForemanTeamdynamix: skipping engine hook (#{e})"
       end
     end
