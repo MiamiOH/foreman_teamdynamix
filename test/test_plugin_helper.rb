@@ -1,6 +1,6 @@
 # This calls the main test_helper in Foreman-core
 SETTINGS[:team_dynamix] = { appID: 'testAppID',
-                            asset_attributes: {} }
+                            fields: {} }
 require 'fake_team_dynamix_api'
 
 require 'test_helper'
