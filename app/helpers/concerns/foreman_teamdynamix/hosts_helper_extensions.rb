@@ -1,16 +1,15 @@
 module ForemanTeamdynamix
   module HostsHelperExtensions
     extend ActiveSupport::Concern
-    DEFAULT_ASSET_ATTRS = { 'Asset ID': 'ID'.freeze, 'Owner': 'OwningCustomerName'.freeze, 'Parent Asset': 'ParentID'.freeze }
+    DEFAULT_ASSET_ATTRS = { 'Asset ID': 'ID', 'Owner': 'OwningCustomerName', 'Parent Asset': 'ParentID' }
 
     def td_tab_title
       SETTINGS[:team_dynamix][:title] || 'Team Dynamix'
     end
 
-    def teamdynamix_tab_fields
+    def teamdynamix_fields(host)
       asset_attrs = SETTINGS[:team_dynamix][:asset_attributes] || DEFAULT_ASSET_ATTRS
-
-      @asset = TdApi.get_asset(@host.asset_id)
+      @asset = TeamDynamixApi.get_asset(host.asset_id)
 
       fields = []
       asset_attrs.each do |field_name, asset_attr|
@@ -19,7 +18,7 @@ module ForemanTeamdynamix
       end
       fields
     rescue StandardError => e
-      raise "Error getting asset Data form Team Dynamix: #{e.message}"
+      ['Error': "Error getting asset Data form Team Dynamix: #{e.message}"]
     end
   end
 end
