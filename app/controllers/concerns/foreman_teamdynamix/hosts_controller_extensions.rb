@@ -3,9 +3,19 @@ module ForemanTeamdynamix
   module HostsControllerExtensions
     extend ActiveSupport::Concern
 
-    def new_action
-      render 'foreman_teamdynamix/hosts/new_action'
-      # automatically renders view/foreman_teamdynamix/hosts/new_action
+    def team_dynamix
+      find_resource
+      render partial: 'foreman_teamdynamix/hosts/team_dynamix', :locals => { :host => @host }
+    end
+
+    private
+
+    def action_permission
+      if params[:action] == 'team_dynamix'
+        :view
+      else
+        super
+      end
     end
   end
 end
