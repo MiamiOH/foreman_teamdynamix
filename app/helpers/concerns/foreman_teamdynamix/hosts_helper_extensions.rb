@@ -1,18 +1,18 @@
 module ForemanTeamdynamix
   module HostsHelperExtensions
     extend ActiveSupport::Concern
-    DEFAULT_ASSET_ATTRS = { 'Asset ID': 'ID', 'Owner': 'OwningCustomerName', 'Parent Asset': 'ParentID' }
+    DEFAULT_TD_PANE_FIELDS = { 'Asset ID': 'ID', 'Owner': 'OwningCustomerName', 'Parent Asset': 'ParentID' }
 
     def td_tab_title
       SETTINGS[:team_dynamix][:title] || 'Team Dynamix'
     end
 
     def teamdynamix_fields(host)
-      asset_attrs = SETTINGS[:team_dynamix][:asset_attributes] || DEFAULT_ASSET_ATTRS
+      td_pane_fields = SETTINGS[:team_dynamix][:fields] || DEFAULT_TD_PANE_FIELDS
       @asset = TeamDynamixApi.get_asset(host.asset_id)
 
       fields = []
-      asset_attrs.each do |field_name, asset_attr|
+      td_pane_fields.each do |field_name, asset_attr|
         asset_attr_val = @asset[asset_attr]
         fields += [[_(field_name.to_s), asset_attr_val]] if asset_attr_val.present?
       end
