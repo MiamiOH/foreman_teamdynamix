@@ -27,6 +27,7 @@ module ForemanTeamdynamix
       begin
         HostsHelper.send(:include, ForemanTeamdynamix::HostsHelperExtensions)
         ::HostsController.send(:include, ForemanTeamdynamix::HostsControllerExtensions)
+        ::Host::Managed.send(:include, ForemanTeamdynamix::HostManagedExtensions)
       rescue StandardError => e
         Rails.logger.warn "ForemanTeamdynamix: skipping engine hook (#{e})"
       end

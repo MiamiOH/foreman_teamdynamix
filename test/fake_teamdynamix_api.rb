@@ -1,10 +1,11 @@
-class FakeTDApi
-  def get_asset(*)
-    asset
+class FakeTeamdynamixApi
+
+  def create_asset(*)
+    get_asset(*)
   end
 
   # rubocop:disable Metrics/MethodLength, Metrics/AbcSize
-  def self.asset
+  def get_asset(*)
     {
       ID: Random.rand(1000..10_000),
       AppID: Random.rand(1000..10_000),
