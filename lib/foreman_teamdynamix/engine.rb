@@ -5,6 +5,7 @@ module ForemanTeamdynamix
     config.autoload_paths += Dir["#{config.root}/app/controllers/concerns"]
     config.autoload_paths += Dir["#{config.root}/app/helpers/concerns"]
     config.autoload_paths += Dir["#{config.root}/app/models/concerns"]
+    config.autoload_paths += Dir["#{config.root}/app/models"]    
     config.autoload_paths += Dir["#{config.root}/app/overrides"]
     config.autoload_paths += Dir["#{config.root}/lib"]
 
@@ -26,6 +27,7 @@ module ForemanTeamdynamix
       begin
         HostsHelper.send(:include, ForemanTeamdynamix::HostsHelperExtensions)
         ::HostsController.send(:include, ForemanTeamdynamix::HostsControllerExtensions)
+        ::Host::Managed.send(:include, ForemanTeamdynamix::HostManagedExtensions)
       rescue StandardError => e
         Rails.logger.warn "ForemanTeamdynamix: skipping engine hook (#{e})"
       end
