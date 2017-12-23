@@ -7,7 +7,7 @@ module ForemanTeamdynamix
     end
   
     def create_td_asset
-      FakeTeamDynamixApi.new.create_asset(self)
+      TeamDynamixApi.new.create_asset(self)
     end
     
   end
