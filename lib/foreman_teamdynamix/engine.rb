@@ -9,6 +9,12 @@ module ForemanTeamdynamix
     config.autoload_paths += Dir["#{config.root}/app/overrides"]
     config.autoload_paths += Dir["#{config.root}/lib"]
 
+    initializer 'foreman_teamdynamix.load_app_instance_data' do |app|
+      if ForemanTeamdynamix::Engine.paths['db/migrate'].existent
+        app.config.paths['db/migrate'].concat(ForemanTeamdynamix::Engine.paths['db/migrate'].to_a)
+      end
+    end
+
     initializer 'foreman_teamdynamix.register_plugin', :before => :finisher_hook do |_app|
       Foreman::Plugin.register :foreman_teamdynamix do
         requires_foreman '>= 1.7'
