@@ -1,7 +1,7 @@
 class FakeTeamdynamixApi
 
   def create_asset(*)
-    get_asset(*)
+    get_asset
   end
 
   # rubocop:disable Metrics/MethodLength, Metrics/AbcSize

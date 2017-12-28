@@ -1,13 +1,12 @@
 require 'test_plugin_helper'
 
 class HostsControllerTest < ActionController::TestCase
-  let(:os) { FactoryBot.create(:operatingsystem, name: 'CentOS', major: '7', type: 'Redhat') }
-  let(:arch) { FactoryBot.create(:architecture) }
-  let(:host) { FactoryBot.create(:host, mac: '00:00:00:00:00:00', ip: '127.0.0.1', operatingsystem: os, arch: arch) }
-  let(:asset) { FakeTDApi.asset }
-  let(:default_TD_fields) { { 'Asset ID': asset['ID'], 'Owner': asset['OwningCustomerName'], 'Parent Asset': asset['ParentID'], 'mu.ci.Description': 'to be discussed', 'Ticket Routing Details': 'to be discussed' } }
   let(:td_tab_title) { SETTINGS[:teamdynamix][:title] || 'Team Dynamix' }
-  
+  let(:host) { FactoryBot.create(:host, :managed) }
+  let(:td_api) { FakeTeamdynamixApi.new }
+  before do
+    Host::Managed.any_instance.stubs(:td_api).returns(td_api)
+  end
   # rubocop:disable Metrics/LineLength, Style/StringLiterals, HttpPositionalArguments
   describe 'Given host exist as an asset in TeamDynamix' do
     describe 'when TeamDynamix asset attributes are configured' do
