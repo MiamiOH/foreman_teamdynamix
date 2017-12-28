@@ -5,12 +5,12 @@ module Host
     describe '#create' do
 
       it 'triggers after_create callback on Host::Managed model' do
-        host = FactoryBot.create(:host, :managed)   
-        assert_send([Host::Managed, :after_create, :create_td_asset])
+        host = FactoryBot.create(:host, :managed)
+        assert_send([Host::Managed, :after_create, :create_asset])
       end
       
       it 'calls Teamdynamix API to create an asset' do
-        host = FactoryBot.create(:host, :managed)   
+        host = FactoryBot.create(:host, :managed)
         assert_send([TeamDynamixApi.new, :create_asset, host])
       end
       
