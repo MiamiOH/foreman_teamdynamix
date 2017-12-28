@@ -1,12 +1,10 @@
 class FakeTeamDynamixApi
-  
-  def create_asset(host)
-    # switch with actual output
+  def create_asset(*)
     true
   end
 
   # rubocop:disable Metrics/MethodLength, Metrics/AbcSize
-  def get_asset(id)
+  def get_asset(*)
     {
       ID: Random.rand(1000..10_000),
       AppID: Random.rand(1000..10_000),
