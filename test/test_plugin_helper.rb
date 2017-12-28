@@ -1,6 +1,9 @@
 # This calls the main test_helper in Foreman-core
-SETTINGS[:team_dynamix] = { apiUrl: 'https://api.teamdynamix.com/TDWebApi/api',
-                            appID: 'testAppID',
+SETTINGS[:team_dynamix] || { api: { url: 'https://api.teamdynamix.com/TDWebApi/api',
+                                    id: 'testAppID',
+                                    username: 'a_valid_username',
+                                    password: 'a_valid_pwd'
+                                  },
                             fields: {} }
 require 'test_helper'
 
