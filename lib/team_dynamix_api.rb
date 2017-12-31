@@ -15,7 +15,7 @@ class TeamDynamixApi
     raise('Missing Team Dynamix API URL in plugin settings')
   end
   API_URL = API_CONFIG[:url]
-  
+
   def get_asset(asset_id)
     uri = URI.parse(API_URL + "/#{APP_ID}/assets/#{asset_id}")
     http = Net::HTTP.new(uri.host, uri.port)
@@ -23,10 +23,10 @@ class TeamDynamixApi
     # set verb
     req = Net::HTTP::Get.new(uri)
     # set headers
-    req.add_field('Authorization', auth_token)
+    req.add_field('Authorization', 'Bearer ' + auth_token)
     # send request
-    res = Net::HTTP.start(uri.host, uri.port) do |http|
-      http.request(req)
+    res = http.start do |http_handler|
+      http_handler.request(req)
     end
     # return response
     parse_response(res)
@@ -39,20 +39,20 @@ class TeamDynamixApi
     # set verb
     req = Net::HTTP::Post.new(uri)
     # set headers
-    req.add_field('Authorization', auth_token)
+    req.add_field('Authorization', 'Bearer ' + auth_token)
     req.add_field('Content-Type', 'application/json')
     # set payload
     req.body = payload_to_create_asset(host)
-    puts "\n\n req.body #{req.body}"
     # send request
-    res = Net::HTTP.start(uri.host, uri.port) do |http|
-      http.request(req)
+    res = http.start do |http_handler|
+      http_handler.request(req)
     end
     # return response
     parse_response(res)
   end
 
   private
+
   def auth_token
     return @auth_token if @auth_token
     uri = URI.parse(API_URL + '/auth')
@@ -66,23 +66,33 @@ class TeamDynamixApi
     req.body = { username: API_CONFIG[:username],
                  password: API_CONFIG[:password] }.to_json
     # send request
-    res =  http.start do |http|
-      http.request(req)
+    res =  http.start do |http_handler|
+      http_handler.request(req)
     end
     # return response
-    @auth_token = parse_response(res)
+    token = parse_response(res)
+    valid_auth_token?(token) ? @auth_token = token : raise("Invalid auth token #{token}")
   end
 
-  def parse_response res
-    case res.code
-    when '200' || '201' then
-      return res.body
-    else
-      raise res.msg
+  def parse_response(res)
+    begin
+      res_body = JSON.parse(res.body)
+    rescue JSON::ParserError
+      res_body = res.body
     end
+    case res.code
+    when /20(.)/ then res.body
+    else
+      raise({ status: res.code, msg: res.msg, body: res_body }.to_json)
+    end
+  end
+
+  def valid_auth_token?(token)
+    token.match(/^[a-zA-Z0-9\.\-\_]*$/)
   end
 
   def payload_to_create_asset host
-    {AppID: APP_ID, OwningCustomerID: 'test'}.to_json
+    # StatusID: 'TODO', OwningCustomerID: 'TODO', SerialNumber: 'TODO'
+    { AppID: APP_ID, SerialNumber: host.name }.to_json
   end
 end
