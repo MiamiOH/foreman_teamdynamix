@@ -5,7 +5,6 @@ module ForemanTeamdynamix
     config.autoload_paths += Dir["#{config.root}/app/controllers/concerns"]
     config.autoload_paths += Dir["#{config.root}/app/helpers/concerns"]
     config.autoload_paths += Dir["#{config.root}/app/models/concerns"]
-    config.autoload_paths += Dir["#{config.root}/app/models"]    
     config.autoload_paths += Dir["#{config.root}/app/overrides"]
     config.autoload_paths += Dir["#{config.root}/lib"]
 
@@ -14,7 +13,7 @@ module ForemanTeamdynamix
         app.config.paths['db/migrate'].concat(ForemanTeamdynamix::Engine.paths['db/migrate'].to_a)
       end
     end
-      
+
     initializer 'foreman_teamdynamix.register_plugin', :before => :finisher_hook do |_app|
       Foreman::Plugin.register :foreman_teamdynamix do
         requires_foreman '>= 1.7'
@@ -27,7 +26,7 @@ module ForemanTeamdynamix
         end
       end
     end
-            
+
     # Include concerns in this config.to_prepare block
     config.to_prepare do
       begin

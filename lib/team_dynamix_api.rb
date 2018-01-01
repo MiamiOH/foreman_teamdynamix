@@ -92,7 +92,7 @@ class TeamDynamixApi
   end
 
   def payload_to_create_asset host
-    # StatusID: 'TODO', OwningCustomerID: 'TODO', SerialNumber: 'TODO'
-    { AppID: APP_ID, SerialNumber: host.name }.to_json
+    # ToDo: OwningCustomerID, mu.ci.Lifecycle Status, mu.application.software.Type
+    { AppID: APP_ID, StatusID: API_CONFIG[:status_id], SerialNumber: host.name }.to_json
   end
 end
