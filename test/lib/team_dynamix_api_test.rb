@@ -11,11 +11,9 @@ class TeamDynamixApiTest < ActiveSupport::TestCase
     let(:host) { FactoryBot.create(:host, :managed) }
 
     context 'Valid Request' do
-      let(:expected_asset) { { ID: '', AppID: app_id, OwningCustomerID: owning_customer_id, SerialNumber: serial_number } }
-      let(:status_id) { '300' }
-      let(:good_payload) { { StatusID: status_id, AppID: app_id, OwningCustomerID: owning_customer_id, SerialNumber: serial_number }.to_json }
+      let(:expected_asset) { { AppID: app_id, OwningCustomerID: owning_customer_id, SerialNumber: serial_number } }
       before do
-        TeamDynamixApi.any_instance.stubs(:payload_to_create_asset).returns(good_payload)
+        SETTINGS[:team_dynamix][:api][:status_id] = 641
       end
       it 'returns asset json' do
         assert_equal(subject.create_asset(host), expected_asset)
