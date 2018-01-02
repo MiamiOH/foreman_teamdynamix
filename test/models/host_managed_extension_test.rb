@@ -19,6 +19,9 @@ module Host
         assert_send([td_api, :create_asset, host])
       end
 
+      it 'sets host#teamdynamix_asset_id' do
+        assert_not_nil(host.teamdynamix_asset_id)
+      end
     end
   end
 end

@@ -11,7 +11,9 @@ module ForemanTeamdynamix
     end
 
     def create_teamdynamix_asset
-      td_api.create_asset(self)
+      asset = td_api.create_asset(self)
+      self.teamdynamix_asset_id = asset['ID']
+      self.save
     end
 
   end
