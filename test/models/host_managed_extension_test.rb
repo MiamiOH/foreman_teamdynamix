@@ -17,7 +17,10 @@ module Host
       it 'calls Teamdynamix API to create an asset' do
         assert_send([td_api, :create_asset, host])
       end
-      
+
+      it 'sets host#td_asset_id' do
+        assert_not_nil(host.td_asset_id)
+      end
     end
   end
 end

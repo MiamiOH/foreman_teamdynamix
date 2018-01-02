@@ -9,8 +9,7 @@ module ForemanTeamdynamix
 
     def teamdynamix_fields(host)
       td_pane_fields = SETTINGS[:team_dynamix][:fields] || DEFAULT_TD_PANE_FIELDS
-      @asset = TeamDynamixApi.get_asset(host.asset_id)
-
+      @asset = TeamDynamixApi.new.get_asset(host.td_asset_id)
       fields = []
       td_pane_fields.each do |field_name, asset_attr|
         asset_attr_val = @asset[asset_attr]
