@@ -16,33 +16,38 @@ class TeamDynamixApi
   end
   API_URL = API_CONFIG[:url]
 
+  # returns TeamDynamix.Api.Assets.Asset
   def get_asset(asset_id)
     uri = URI.parse(API_URL + "/#{APP_ID}/assets/#{asset_id}")
-    http = Net::HTTP.new(uri.host, uri.port)
-    http.use_ssl = true
-    # set verb
-    req = Net::HTTP::Get.new(uri)
-    # set headers
-    req.add_field('Authorization', 'Bearer ' + auth_token)
-    # send request
-    res = http.start do |http_handler|
-      http_handler.request(req)
-    end
-    # return response
-    parse_response(res)
+    rest(:get, uri)
   end
 
   def create_asset(host)
     uri = URI.parse(API_URL + "/#{APP_ID}/assets")
+    rest(:post, uri, create_asset_payload(host))
+  end
+
+  # Gets a list of assets matching the specified criteria. (IEnumerable(Of TeamDynamix.Api.Assets.Asset))
+  def search_asset(search_params)
+    uri = URI.parse(API_URL + "/#{APP_ID}/assets/search")
+    rest(:post, uri, search_params)
+  end
+
+  private
+
+  def rest(method, uri, payload = nil)
     http = Net::HTTP.new(uri.host, uri.port)
     http.use_ssl = true
-    # set verb
-    req = Net::HTTP::Post.new(uri)
+    # set verb, payload and headers
+    if method == :post
+      req = Net::HTTP::Post.new(uri)
+      req.add_field('Content-Type', 'application/json')
+      req.body = payload.to_json
+    else
+      req = Net::HTTP::Get.new(uri)
+    end
     # set headers
     req.add_field('Authorization', 'Bearer ' + auth_token)
-    req.add_field('Content-Type', 'application/json')
-    # set payload
-    req.body = payload_to_create_asset(host)
     # send request
     res = http.start do |http_handler|
       http_handler.request(req)
@@ -50,8 +55,6 @@ class TeamDynamixApi
     # return response
     parse_response(res)
   end
-
-  private
 
   def auth_token
     return @auth_token if @auth_token
@@ -81,7 +84,7 @@ class TeamDynamixApi
       res_body = res.body
     end
     case res.code
-    when /20(.)/ then res.body
+    when /20(.)/ then res_body
     else
       raise({ status: res.code, msg: res.msg, body: res_body }.to_json)
     end
@@ -91,8 +94,8 @@ class TeamDynamixApi
     token.match(/^[a-zA-Z0-9\.\-\_]*$/)
   end
 
-  def payload_to_create_asset host
-    # ToDo: OwningCustomerID, mu.ci.Lifecycle Status, mu.application.software.Type
-    { AppID: APP_ID, StatusID: API_CONFIG[:status_id], SerialNumber: host.name }.to_json
+  def create_asset_payload host
+    # TODO: OwningCustomerID, mu.ci.Lifecycle Status, mu.application.software.Type
+    { AppID: APP_ID, StatusID: API_CONFIG[:status_id], SerialNumber: host.name }
   end
 end
