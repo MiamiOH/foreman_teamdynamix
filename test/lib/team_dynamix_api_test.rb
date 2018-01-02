@@ -4,12 +4,12 @@ class TeamDynamixApiTest < ActiveSupport::TestCase
   let(:subject) { TeamDynamixApi.new }
   let(:app_id) { SETTINGS[:team_dynamix][:api][:id] }
   let(:app_name) { 'Assets/CIs' }
+  let(:host) { FactoryBot.create(:host, :managed) }
   let(:owning_customer_id) { 'TestOwningCustomerID' }
   let(:serial_number) { 'test_host_serial_num' }
   # rubocop:disable Style/StringLiterals
-  describe '#create_asset' do
-    let(:host) { FactoryBot.create(:host, :managed) }
 
+  describe '#create_asset' do
     context 'Valid Request' do
       let(:expected_asset) { { AppID: app_id, OwningCustomerID: owning_customer_id, SerialNumber: serial_number } }
       before do
@@ -20,40 +20,12 @@ class TeamDynamixApiTest < ActiveSupport::TestCase
       end
     end
 
-    context 'Invalid Request: Invalid Status' do
-      let(:bad_payload) { { StatusID: 1, AppID: app_id, OwningCustomerID: owning_customer_id, SerialNumber: serial_number }.to_json }
-      let(:error_body) { { "ID" => -1, "Message" => "The specified status is invalid." } }
-      let(:error) { { "status": "400", "msg": "Bad Request", "body": error_body }.to_json }
-      before do
-        TeamDynamixApi.any_instance.stubs(:payload_to_create_asset).returns(bad_payload)
-      end
-      it 'raises error with status 400 for invalid payload' do
-        assert_raises_with_message(RuntimeError, error) do
-          subject.create_asset(host)
-        end
-      end
-    end
-
-    context 'Invalid Request: missing StatusID' do
-      let(:bad_payload) { { AppID: app_id, OwningCustomerID: owning_customer_id, SerialNumber: serial_number }.to_json }
-      let(:error_body) { { "ID" => -1, "Message" => "Status is required." } }
-      let(:error) { { "status": "400", "msg": "Bad Request", "body": error_body }.to_json }
-      before do
-        TeamDynamixApi.any_instance.stubs(:payload_to_create_asset).returns(bad_payload)
-      end
-      it 'raises error with status 400 for invalid payload' do
-        assert_raises_with_message(RuntimeError, error) do
-          subject.create_asset(host)
-        end
-      end
-    end
-
     context 'Invalid Request: missing SerialNumber' do
-      let(:bad_payload) { { AppID: app_id, OwningCustomerID: owning_customer_id }.to_json }
+      let(:bad_payload) { { AppID: app_id, OwningCustomerID: owning_customer_id } }
       let(:error_body) { { "ID" => -1, "Message" => "Name or serial number must be provided for asset records." } }
       let(:error) { { "status": "400", "msg": "Bad Request", "body": error_body }.to_json }
       before do
-        TeamDynamixApi.any_instance.stubs(:payload_to_create_asset).returns(bad_payload)
+        TeamDynamixApi.any_instance.stubs(:create_asset_payload).returns(bad_payload)
       end
       it 'raises error with status 400 for invalid payload' do
         assert_raises_with_message(RuntimeError, error) do
@@ -83,6 +55,25 @@ class TeamDynamixApiTest < ActiveSupport::TestCase
         assert_raises_with_message(RuntimeError, error) do
           subject.send(:auth_token)
         end
+      end
+    end
+  end
+
+  describe '#search_asset' do
+    context 'Valid Request' do
+      let(:asset_id) { '10175' }
+      let(:search_params) { { AppID: app_id, ID: asset_id } }
+      it 'returns asset json' do
+        assert_not_nil(subject.search_asset(search_params))
+      end
+    end
+  end
+
+  describe '#get_asset' do
+    context 'Valid Request' do
+      let(:asset_id) { '10175' }
+      it 'returns asset json' do
+        assert_not_nil(subject.get_asset(asset_id))
       end
     end
   end
