@@ -3,24 +3,27 @@ require 'test_helper'
 class TeamDynamixApiTest < ActiveSupport::TestCase
   let(:subject) { TeamDynamixApi.new }
   let(:app_id) { SETTINGS[:team_dynamix][:api][:id] }
-  let(:app_name) { 'Assets/CIs' }
-  let(:host) { FactoryBot.create(:host, :managed) }
-  let(:owning_customer_id) { 'TestOwningCustomerID' }
-  let(:serial_number) { 'test_host_serial_num' }
+  let(:host) { FactoryBot.build(:host, :managed) }
   # rubocop:disable Style/StringLiterals
 
   describe '#create_asset' do
     context 'Valid Request' do
-      let(:expected_asset) { { AppID: app_id, OwningCustomerID: owning_customer_id, SerialNumber: serial_number } }
-      before do
-        SETTINGS[:team_dynamix][:api][:status_id] = 641
-      end
-      it 'returns asset json' do
-        assert_equal(subject.create_asset(host), expected_asset)
+      let(:asset_ci_desc_expectation) { "Foreman host #{host.fqdn} created by ForemanTeamdynamix plugin" }
+      it 'successfully creates an asset and return it' do
+        asset = subject.create_asset(host)
+        assert_not_nil(asset['ID'])
+        assert_equal(asset['SerialNumber'], host.name)
+        assert_equal(asset['AppID'].to_s, app_id.to_s)
+        assert_equal(asset['StatusID'], SETTINGS[:team_dynamix][:api][:create][:StatusID])
+        asset_ci_desc = asset['Attributes'].select { |attrib| attrib['Name'] == 'mu.ci.Description' }[0]['Value']
+        assert_equal(asset_ci_desc, asset_ci_desc_expectation)
+        asset_ci_lifecycle_status = asset['Attributes'].select { |attrib| attrib['Name'] == 'mu.ci.Lifecycle Status' }[0]['Value']
+        assert_equal(asset_ci_lifecycle_status.to_s, subject.send(:get_lifecycle_status).to_s)
       end
     end
 
     context 'Invalid Request: missing SerialNumber' do
+      let(:owning_customer_id) { 'TestOwningCustomerID' }
       let(:bad_payload) { { AppID: app_id, OwningCustomerID: owning_customer_id } }
       let(:error_body) { { "ID" => -1, "Message" => "Name or serial number must be provided for asset records." } }
       let(:error) { { "status": "400", "msg": "Bad Request", "body": error_body }.to_json }

@@ -95,7 +95,46 @@ class TeamDynamixApi
   end
 
   def create_asset_payload host
-    # TODO: OwningCustomerID, mu.ci.Lifecycle Status, mu.application.software.Type
-    { AppID: APP_ID, StatusID: API_CONFIG[:status_id], SerialNumber: host.name }
+    ensure_configured_create_params
+    payload = { AppID: APP_ID, 
+                SerialNumber: host.name
+              }
+    payload.merge!(API_CONFIG[:create])      
+    payload.merge(Attributes: create_asset_attributes(host))
+  end
+  
+  def create_asset_attributes(host)
+    [
+      {
+        ID: 11632,
+        Name: 'mu.ci.Description',
+        Value: "Foreman host #{host.fqdn} created by ForemanTeamdynamix plugin"
+      },
+      {
+        ID: 11634,
+        Name: 'mu.ci.Lifecycle Status',
+        Value: get_lifecycle_status
+      }
+    ]
+  end
+
+  def get_lifecycle_status
+    case Rails.env.downcase
+    when 'test' then 26190
+    when 'development' then 26191
+    when 'stage', 'pre-production' then 26192
+    when 'early-life-support' then 26194
+    when 'production' then 26193
+    end
+  end
+
+  def must_configure_create_params
+    [:StatusID]
+  end
+
+  def ensure_configured_create_params
+    must_configure_create_params.each do |must_configure_param|
+      raise("#{must_configure_param} is required. Set it as a configuration item.") unless API_CONFIG[:create].include?(must_configure_param)
+    end
   end
 end
