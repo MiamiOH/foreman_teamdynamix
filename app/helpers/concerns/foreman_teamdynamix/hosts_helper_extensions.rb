@@ -9,6 +9,7 @@ module ForemanTeamdynamix
 
     def teamdynamix_fields(host)
       td_pane_fields = SETTINGS[:team_dynamix][:fields] || DEFAULT_TD_PANE_FIELDS
+      return ["No TeamDynamix Asset is linked to this host"] unless host.td_asset_id
       @asset = TeamDynamixApi.new.get_asset(host.td_asset_id)
       fields = []
       td_pane_fields.each do |field_name, asset_attr|
@@ -17,7 +18,7 @@ module ForemanTeamdynamix
       end
       fields
     rescue StandardError => e
-      ['Error': "Error getting asset Data form Team Dynamix: #{e.message}"]
+      ["Error getting asset Data from Team Dynamix: #{e.message}"]
     end
   end
 end
