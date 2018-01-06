@@ -57,7 +57,7 @@
           "Choices": [],
           "IsRequired": false,
           "IsUpdatable": true,
-          "Value": "",
+          "Value": "test routing details",
           "ValueText": "",
           "ChoicesText": "",
           "AssociatedItemIDs": [
@@ -76,7 +76,7 @@
           "Choices": [],
           "IsRequired": false,
           "IsUpdatable": false,
-          "Value": "",
+          "Value": "test Description",
           "ValueText": "",
           "ChoicesText": "",
           "AssociatedItemIDs": [

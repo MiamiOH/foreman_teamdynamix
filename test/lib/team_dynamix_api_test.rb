@@ -1,10 +1,8 @@
 require 'test_helper'
-
 class TeamDynamixApiTest < ActiveSupport::TestCase
   let(:subject) { TeamDynamixApi.new }
   let(:app_id) { SETTINGS[:team_dynamix][:api][:id] }
   let(:host) { FactoryBot.build(:host, :managed) }
-  # rubocop:disable Style/StringLiterals
 
   describe '#create_asset' do
     context 'Valid Request' do
