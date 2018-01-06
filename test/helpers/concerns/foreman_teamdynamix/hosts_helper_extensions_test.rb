@@ -6,11 +6,14 @@ class HostsHelperExtensionsTest < ActiveSupport::TestCase
 
   describe '#teamdynamix_fields(host)' do
     context 'when host does not have an asset associated' do
+      before do
+        host.teamdynamix_asset_id = nil
+      end
       test 'returns an array with error message' do
         assert_nothing_raised do
           error_resp = teamdynamix_fields(host).first
-          assert_equal(error_resp.first, 'Error')
-          assert_not_nil(error_resp.last)
+          assert_equal(error_resp.first, 'Asset')
+          assert_not_nil(error_resp, 'None Associated')
         end
       end
     end

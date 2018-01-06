@@ -96,7 +96,8 @@ class TeamdynamixApi
   def create_asset_payload host
     ensure_configured_create_params
     payload = { AppID: APP_ID, 
-                SerialNumber: host.name
+                SerialNumber: host.name,
+                Name: host.fqdn
               }
     payload.merge!(API_CONFIG[:create])      
     payload.merge(Attributes: create_asset_attributes(host))
