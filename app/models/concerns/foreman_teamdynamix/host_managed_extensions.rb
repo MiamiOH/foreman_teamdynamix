@@ -14,7 +14,7 @@ module ForemanTeamdynamix
     def create_td_asset
       asset = td_api.create_asset(self)
       self.td_asset_id = asset['ID']
-      self.save
+      self.save!(:validate => false) # don't want to trigger callbacks
     end
   end
 end

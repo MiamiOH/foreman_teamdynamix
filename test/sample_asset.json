@@ -1,5 +1,5 @@
 {
-  "ID": 10161,
+  "ID": 1111,
   "AppID": 730,
   "AppName": "Assets/CIs",
   "ProductModelID": 1070,
@@ -24,7 +24,7 @@
   "RequestingCustomerName": "None",
   "RequestingDepartmentID": 0,
   "RequestingDepartmentName": "None",
-  "OwningCustomerID": "ad74ac9b-a0b0-e311-bccd-0010188dda92",
+  "OwningCustomerID": "00000000-0000-0000-0000-000000000000",
   "OwningCustomerName": "some name",
   "OwningDepartmentID": 16253,
   "OwningDepartmentName": "Advancement Services",
@@ -36,10 +36,10 @@
   "MaintenanceScheduleName": "None",
   "ConfigurationItemID": 16308,
   "CreatedDate": "2014-11-20T21:22:52.057Z",
-  "CreatedUid": "32c0ae47-8cdb-e311-bccd-0010188dda92",
+  "CreatedUid": "00000000-0000-0000-0000-000000000000",
   "CreatedFullName": "some name",
   "ModifiedDate": "2017-09-15T15:25:09.79Z",
-  "ModifiedUid": "d7ae8758-bc30-e711-80ce-000d3a13db68",
+  "ModifiedUid": "00000000-0000-0000-0000-000000000000",
   "ModifiedFullName": "some name",
   "ExternalID": "Banner Advancement",
   "ExternalSourceID": 0,
@@ -189,5 +189,5 @@
       }
   ],
   "Attachments": [],
-  "Uri": "api/730/assets/10161"
+  "Uri": "api/730/assets/1111"
 }
