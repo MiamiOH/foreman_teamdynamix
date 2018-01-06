@@ -14,7 +14,14 @@ All attributes under [:api][:create] are passed as is to the Team Dynmamix API w
     :create:
       :StatusID: integer_id
       :OwningCustomerName: string
-  :fields: {}
+  :title: 'custom title for Team Dynamix Tab'
+  :fields:
+    'Asset ID': ID
+    'Owner': OwningCustomerName
+    'Parent Asset': ParentID
+    'Nested Attribute': Attributes.'attribute name'
+    'mu.ci.Description': Attributes.'mu.ci.Description'
+    'Ticket Routing Details': Attributes.'Ticket Routing Details'
 ```
 
 # Add additional host attirbute
