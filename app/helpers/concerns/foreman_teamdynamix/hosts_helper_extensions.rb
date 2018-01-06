@@ -14,12 +14,20 @@ module ForemanTeamdynamix
 
       fields = []
       td_pane_fields.each do |field_name, asset_attr|
-        asset_attr_val = @asset[asset_attr]
-        fields += [[_(field_name.to_s), asset_attr_val]] if asset_attr_val.present?
+        asset_attr_val = @asset.has_key?(asset_attr) ? @asset[asset_attr] : get_nested_attrib_val(asset_attr)
+        fields += [[_(field_name.to_s), asset_attr_val]]
       end
       fields
     rescue StandardError => e
       [[_('Error'), e.message]]
+    end
+
+    def get_nested_attrib_val nested_attrib
+      parent_attrib, child_attrib = nested_attrib.split(".'")
+      child_attrib.gsub!(/'/, '')
+      asset_attrib = @asset[parent_attrib].select { |attrib| attrib['Name'] == child_attrib }
+      return '' unless asset_attrib.present?
+      asset_attrib[0]['Value']
     end
   end
 end
