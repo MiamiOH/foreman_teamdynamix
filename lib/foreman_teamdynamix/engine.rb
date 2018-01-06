@@ -6,6 +6,13 @@ module ForemanTeamdynamix
     config.autoload_paths += Dir["#{config.root}/app/helpers/concerns"]
     config.autoload_paths += Dir["#{config.root}/app/models/concerns"]
     config.autoload_paths += Dir["#{config.root}/app/overrides"]
+    config.autoload_paths += Dir["#{config.root}/lib"]
+
+    initializer 'foreman_teamdynamix.load_app_instance_data' do |app|
+      if ForemanTeamdynamix::Engine.paths['db/migrate'].existent
+        app.config.paths['db/migrate'].concat(ForemanTeamdynamix::Engine.paths['db/migrate'].to_a)
+      end
+    end
 
     initializer 'foreman_teamdynamix.register_plugin', :before => :finisher_hook do |_app|
       Foreman::Plugin.register :foreman_teamdynamix do
@@ -14,7 +21,7 @@ module ForemanTeamdynamix
         # Add permissions
         security_block :foreman_teamdynamix do
           permission :view_hosts,
-                     { :hosts => [:new_action] },
+                     { :hosts => [:team_dynamix] },
                      :resource_type => 'Host'
         end
       end
@@ -23,9 +30,9 @@ module ForemanTeamdynamix
     # Include concerns in this config.to_prepare block
     config.to_prepare do
       begin
-        HostsHelper.send(:include, ForemanCustomTab::HostsHelperExtensions)
-        ::HostsController.send(:include,
-                               ForemanCustomTab::HostsControllerExtensions)
+        HostsHelper.send(:include, ForemanTeamdynamix::HostsHelperExtensions)
+        ::HostsController.send(:include, ForemanTeamdynamix::HostsControllerExtensions)
+        ::Host::Managed.send(:include, ForemanTeamdynamix::HostManagedExtensions)
       rescue StandardError => e
         Rails.logger.warn "ForemanTeamdynamix: skipping engine hook (#{e})"
       end

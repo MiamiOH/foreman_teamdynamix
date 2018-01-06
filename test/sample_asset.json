@@ -1,0 +1,193 @@
+{
+  "ID": 1111,
+  "AppID": 730,
+  "AppName": "Assets/CIs",
+  "ProductModelID": 1070,
+  "ProductModelName": "Application/Software",
+  "ManufacturerID": 1030,
+  "ManufacturerName": "MU",
+  "SupplierID": 1031,
+  "SupplierName": "Supplier",
+  "StatusID": 641,
+  "StatusName": "In Use",
+  "LocationID": 0,
+  "LocationName": "None",
+  "LocationRoomID": 0,
+  "LocationRoomName": "None",
+  "Tag": null,
+  "SerialNumber": "Banner Advancement",
+  "Name": "",
+  "PurchaseCost": 0,
+  "AcquisitionDate": "0001-01-01T05:00:00Z",
+  "ExpectedReplacementDate": "0001-01-01T05:00:00Z",
+  "RequestingCustomerID": "00000000-0000-0000-0000-000000000000",
+  "RequestingCustomerName": "None",
+  "RequestingDepartmentID": 0,
+  "RequestingDepartmentName": "None",
+  "OwningCustomerID": "00000000-0000-0000-0000-000000000000",
+  "OwningCustomerName": "some name",
+  "OwningDepartmentID": 16253,
+  "OwningDepartmentName": "Advancement Services",
+  "ParentID": 10306,
+  "ParentSerialNumber": "Banner",
+  "ParentName": "",
+  "ParentTag": null,
+  "MaintenanceScheduleID": 0,
+  "MaintenanceScheduleName": "None",
+  "ConfigurationItemID": 16308,
+  "CreatedDate": "2014-11-20T21:22:52.057Z",
+  "CreatedUid": "00000000-0000-0000-0000-000000000000",
+  "CreatedFullName": "some name",
+  "ModifiedDate": "2017-09-15T15:25:09.79Z",
+  "ModifiedUid": "00000000-0000-0000-0000-000000000000",
+  "ModifiedFullName": "some name",
+  "ExternalID": "Banner Advancement",
+  "ExternalSourceID": 0,
+  "ExternalSourceName": "None",
+  "Attributes": [
+      {
+          "ID": 11636,
+          "Name": "Ticket Routing Details",
+          "Order": 0,
+          "Description": "",
+          "SectionID": 0,
+          "SectionName": null,
+          "FieldType": "textarea",
+          "DataType": "String",
+          "Choices": [],
+          "IsRequired": false,
+          "IsUpdatable": true,
+          "Value": "",
+          "ValueText": "",
+          "ChoicesText": "",
+          "AssociatedItemIDs": [
+              0
+          ]
+      },
+      {
+          "ID": 11632,
+          "Name": "mu.ci.Description",
+          "Order": 50,
+          "Description": "",
+          "SectionID": 0,
+          "SectionName": null,
+          "FieldType": "textarea",
+          "DataType": "String",
+          "Choices": [],
+          "IsRequired": false,
+          "IsUpdatable": false,
+          "Value": "",
+          "ValueText": "",
+          "ChoicesText": "",
+          "AssociatedItemIDs": [
+              0
+          ]
+      },
+      {
+          "ID": 11634,
+          "Name": "mu.ci.Lifecycle Status",
+          "Order": 50,
+          "Description": "This is the ITSM Lifecycle phase",
+          "SectionID": 0,
+          "SectionName": null,
+          "FieldType": "dropdown",
+          "DataType": "String",
+          "Choices": [
+              {
+                  "ID": 26191,
+                  "Name": "Development",
+                  "IsActive": true,
+                  "DateCreated": "2014-11-13T19:56:04.747Z",
+                  "DateModified": "2014-11-13T19:56:04.747Z",
+                  "Order": 0
+              },
+              {
+                  "ID": 26192,
+                  "Name": "Early-life Support",
+                  "IsActive": true,
+                  "DateCreated": "2014-11-13T19:56:04.747Z",
+                  "DateModified": "2014-11-13T19:56:04.747Z",
+                  "Order": 0
+              },
+              {
+                  "ID": 26194,
+                  "Name": "Pre-production",
+                  "IsActive": true,
+                  "DateCreated": "2014-11-13T19:56:04.75Z",
+                  "DateModified": "2014-11-13T19:56:04.75Z",
+                  "Order": 0
+              },
+              {
+                  "ID": 26193,
+                  "Name": "Production",
+                  "IsActive": true,
+                  "DateCreated": "2014-11-13T19:56:04.747Z",
+                  "DateModified": "2014-11-13T19:56:04.747Z",
+                  "Order": 0
+              },
+              {
+                  "ID": 26190,
+                  "Name": "Test",
+                  "IsActive": true,
+                  "DateCreated": "2014-11-13T19:56:04.747Z",
+                  "DateModified": "2014-11-13T19:56:04.747Z",
+                  "Order": 0
+              }
+          ],
+          "IsRequired": true,
+          "IsUpdatable": false,
+          "Value": "26193",
+          "ValueText": "Production",
+          "ChoicesText": "Production",
+          "AssociatedItemIDs": [
+              0
+          ]
+      },
+      {
+          "ID": 11639,
+          "Name": "mu.application.location",
+          "Order": 204,
+          "Description": "Where is the application running?",
+          "SectionID": 0,
+          "SectionName": null,
+          "FieldType": "hradio",
+          "DataType": "String",
+          "Choices": [
+              {
+                  "ID": 26223,
+                  "Name": "Cloud",
+                  "IsActive": true,
+                  "DateCreated": "2014-11-13T19:56:04.787Z",
+                  "DateModified": "2014-11-13T19:56:04.787Z",
+                  "Order": 0
+              },
+              {
+                  "ID": 26224,
+                  "Name": "Endpoint Device",
+                  "IsActive": true,
+                  "DateCreated": "2014-11-13T19:56:04.787Z",
+                  "DateModified": "2014-11-13T19:56:04.787Z",
+                  "Order": 0
+              },
+              {
+                  "ID": 26222,
+                  "Name": "Premise",
+                  "IsActive": true,
+                  "DateCreated": "2014-11-13T19:56:04.787Z",
+                  "DateModified": "2014-11-13T19:56:04.787Z",
+                  "Order": 0
+              }
+          ],
+          "IsRequired": false,
+          "IsUpdatable": false,
+          "Value": "26222",
+          "ValueText": "Premise",
+          "ChoicesText": "Premise",
+          "AssociatedItemIDs": [
+              0
+          ]
+      }
+  ],
+  "Attachments": [],
+  "Uri": "api/730/assets/1111"
+}
