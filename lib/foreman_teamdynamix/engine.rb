@@ -1,3 +1,4 @@
+require 'deface'
 module ForemanTeamdynamix
   class Engine < ::Rails::Engine
     engine_name 'foreman_teamdynamix'
