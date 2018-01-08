@@ -7,16 +7,8 @@ module ForemanTeamdynamix
       SETTINGS[:team_dynamix][:title] ? SETTINGS[:team_dynamix][:title] : 'Team Dynamix'
     end
 
-    def td_api
-      @td_api || TeamDynamixApi.new
-    end
-
-    def teamdynamix_fields(host)
-      return ["No TeamDynamix Asset is linked to this host"] unless host.td_asset_id
-
-      td_pane_fields = SETTINGS[:team_dynamix][:fields] || DEFAULT_TD_PANE_FIELDS
-      @asset = td_api.get_asset(host.td_asset_id)
-      
+    def teamdynamix_fields
+      td_pane_fields = SETTINGS[:team_dynamix][:fields] || DEFAULT_TD_PANE_FIELDS      
       fields = []
       td_pane_fields.each do |field_name, asset_attr|
         asset_attr_val = @asset.has_key?(asset_attr) ? @asset[asset_attr] : get_nested_attrib_val(asset_attr)
@@ -24,7 +16,12 @@ module ForemanTeamdynamix
       end
       fields
     rescue StandardError => e
-      ["Error getting asset Data from Team Dynamix: #{e.message}"]
+      [e.message]
+    end
+
+    def td_asset_uri
+      config_api_url = SETTINGS[:team_dynamix][:api][:url]
+      config_api_url.split('api').first + @asset['Uri']
     end
 
     def get_nested_attrib_val nested_attrib

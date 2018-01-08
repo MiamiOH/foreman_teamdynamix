@@ -6,6 +6,8 @@ class HostsHelperExtensionsTest < ActiveSupport::TestCase
   let(:td_api) { FakeTeamDynamixApi.new }
   before do
     Host::Managed.any_instance.stubs(:td_api).returns(td_api)
+    @host = host
+    @asset = td_api.get_asset(@host.td_asset_id)
   end
 
   describe '#teamdynamix_fields(host)' do
@@ -18,10 +20,10 @@ class HostsHelperExtensionsTest < ActiveSupport::TestCase
       SETTINGS[:team_dynamix][:fields] = {}
       SETTINGS[:team_dynamix][:fields].merge!(direct_attribs_config)
     end
-    
+
     context 'configuration only has attributes' do
       test 'returns fields as expected' do
-        assert_equal teamdynamix_fields(host), direct_attribs_fields
+        assert_equal teamdynamix_fields, direct_attribs_fields
       end
     end
 
@@ -35,7 +37,7 @@ class HostsHelperExtensionsTest < ActiveSupport::TestCase
         SETTINGS[:team_dynamix][:fields].merge!(nested_attribs_config)
       end
       test 'returns fields as expected' do
-        assert_equal teamdynamix_fields(host), nested_attribs_fields
+        assert_equal teamdynamix_fields, nested_attribs_fields
       end
     end
   end

@@ -5,7 +5,13 @@
     </tr>
   </thead>
   <tbody>
-    <% teamdynamix_fields(host).each do |name, value| %>
+    <tr>
+      <td>URL</td>
+      <td>
+        <a href="<%= td_asset_uri %>" target="_blank"><%= @asset['Uri'] %></a>
+      </td>
+    </tr>
+    <% teamdynamix_fields.each do |name, value| %>
       <tr>
         <td><%= name %></td>
         <td><%= value %></td>
