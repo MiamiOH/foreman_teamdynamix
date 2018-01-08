@@ -2,7 +2,9 @@
 A Foreman Plugin for TeamDynamix. It manages a host lifecycle as a corresponding Asset in TeamDynamix.
 
 ## configuration
-All attributes under [:api][:create] are passed as is to the Team Dynmamix API while creating an asset for the Foreman host.
+All attributes under [:api][:create] are passed as is to the Team Dynamix API while creating an asset for the Foreman host.
+
+Note: A link to the asset in Teamdynamix is displayed as URI, the first field in Team Dynamix Tab by default.
 
 ```
 :teamdynamix:

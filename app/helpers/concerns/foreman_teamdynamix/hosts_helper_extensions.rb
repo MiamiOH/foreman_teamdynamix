@@ -7,12 +7,15 @@ module ForemanTeamdynamix
       SETTINGS[:teamdynamix][:title] || 'Team Dynamix'
     end
 
-    def teamdynamix_fields(host)
+    def teamdynamix_fields
       td_pane_fields = SETTINGS[:teamdynamix][:fields] || DEFAULT_TD_PANE_FIELDS
-      return [[_('Asset'), 'None Associated']] unless host.teamdynamix_asset_id
-      @asset = host.td_api.get_asset(host.teamdynamix_asset_id)
+      return [[_('Asset'), 'None Associated']] unless @host.teamdynamix_asset_id
 
-      fields = []
+      get_teamdynamix_asset(@host.teamdynamix_asset_id)
+
+      # always display a link to the asset
+      fields = [ get_asset_uri ]
+
       td_pane_fields.each do |field_name, asset_attr|
         asset_attr_val = @asset.has_key?(asset_attr) ? @asset[asset_attr] : get_nested_attrib_val(asset_attr)
         fields += [[_(field_name.to_s), asset_attr_val]]
@@ -22,10 +25,27 @@ module ForemanTeamdynamix
       [[_('Error'), e.message]]
     end
 
+    private
+    def get_asset_uri
+      api_url = SETTINGS[:teamdynamix][:api][:url]
+      asset_uri = api_url.split('api').first + @asset['Uri']
+      actual_link = "<a href='#{asset_uri}' target='_blank'>#{@asset['Uri']}</a>"
+      ['URI', actual_link.html_safe]
+    end
+
+    def get_teamdynamix_asset(asset_id)
+      @asset = @host.td_api.get_asset(asset_id)
+    rescue StandardError => e
+      raise "Error getting asset Data from Team Dynamix: #{e.message}"
+    end
+
     def get_nested_attrib_val nested_attrib
       parent_attrib, child_attrib = nested_attrib.split(".'")
-      child_attrib.gsub!(/'/, '')
-      asset_attrib = @asset[parent_attrib].select { |attrib| attrib['Name'] == child_attrib }
+      raise("Invalid configuration '#{nested_attrib}' for Asset field") unless child_attrib
+      child_attrib.delete!("'")
+      parent_attrib_val = @asset[parent_attrib]
+      raise("Asset does not have an attribute '#{parent_attrib}''") unless parent_attrib_val
+      asset_attrib = parent_attrib_val.select { |attrib| attrib['Name'] == child_attrib }
       return '' unless asset_attrib.present?
       asset_attrib[0]['Value']
     end
