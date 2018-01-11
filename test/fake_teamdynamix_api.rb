@@ -4,7 +4,14 @@ class FakeTeamdynamixApi
     get_asset
   end
 
-  # rubocop:disable Metrics/MethodLength, Metrics/AbcSize
+  def search_asset(*)
+    Array.wrap(get_asset)
+  end
+
+  def retire_asset(*)
+    true
+  end
+
   def get_asset(*)
     JSON.parse(File.read(File.join(File.dirname(__FILE__), 'sample_asset.json')))
   end

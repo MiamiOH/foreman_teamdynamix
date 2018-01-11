@@ -8,6 +8,7 @@ module ForemanTeamdynamix
 
     included do
       after_validation :create_teamdynamix_asset, on: :create
+      before_destroy :retire_teamdynamix_asset
       validates :teamdynamix_asset_id, uniqueness: { :allow_blank => true }
     end
 
@@ -16,7 +17,14 @@ module ForemanTeamdynamix
     def create_teamdynamix_asset
       asset = td_api.create_asset(self)
       self.teamdynamix_asset_id = asset['ID']
+    rescue StandardError => e
+      errors.add(:base, e.message)
     end
 
+    def retire_teamdynamix_asset
+      td_api.retire_asset(self.teamdynamix_asset_id) if self.teamdynamix_asset_id
+    rescue StandardError => e
+      errors.add(:base, e.message)
+    end
   end
 end

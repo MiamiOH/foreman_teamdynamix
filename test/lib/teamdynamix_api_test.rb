@@ -4,7 +4,30 @@ class TeamdynamixApiTest < ActiveSupport::TestCase
   let(:subject) { TeamdynamixApi.new }
   let(:app_id) { SETTINGS[:teamdynamix][:api][:id] }
   let(:host) { FactoryBot.build(:host, :managed) }
-  # rubocop:disable Style/StringLiterals
+  let(:host_name) { 'delete.foreman_teamdynamix.com' }
+  before do
+    host.name = host_name
+  end
+
+  describe '#retire_asset' do
+    let(:status_id) { 642 }
+    before do
+      SETTINGS[:teamdynamix][:api][:delete] = { StatusID: status_id }
+    end
+    let(:td_asset_id) do
+      test_assets = subject.search_asset({}).select do |asset|
+        asset['Name'] == host_name
+      end
+      test_assets = [subject.create_asset(host)] if test_assets.blank?
+      test_assets.first['ID']
+    end
+    it 'marks the asset retired in Team Dynamix' do
+      assert_nothing_raised do
+        asset = subject.retire_asset(td_asset_id)
+        assert_equal(asset['StatusID'], status_id)
+      end
+    end
+  end
 
   describe '#create_asset' do
     context 'Valid Request' do
@@ -81,4 +104,5 @@ class TeamdynamixApiTest < ActiveSupport::TestCase
       end
     end
   end
+
 end

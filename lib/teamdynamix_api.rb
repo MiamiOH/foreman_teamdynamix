@@ -26,6 +26,11 @@ class TeamdynamixApi
     rest(:post, uri, create_asset_payload(host))
   end
 
+  def retire_asset(asset_id)
+    uri = URI.parse(API_URL + "/#{APP_ID}/assets/#{asset_id}")
+    rest(:post, uri, retire_asset_payload(asset_id))
+  end
+
   # Gets a list of assets matching the specified criteria. (IEnumerable(Of TeamDynamix.Api.Assets.Asset))
   def search_asset(search_params)
     uri = URI.parse(API_URL + "/#{APP_ID}/assets/search")
@@ -93,16 +98,21 @@ class TeamdynamixApi
     token.match(/^[a-zA-Z0-9\.\-\_]*$/)
   end
 
+  def retire_asset_payload(asset_id)
+    asset = get_asset(asset_id)
+    asset.merge!(API_CONFIG[:delete].stringify_keys)
+  end
+
   def create_asset_payload host
     ensure_configured_create_params
     payload = { AppID: APP_ID, 
                 SerialNumber: host.name,
                 Name: host.fqdn
               }
-    payload.merge!(API_CONFIG[:create])      
+    payload.merge!(API_CONFIG[:create].stringify_keys)
     payload.merge(Attributes: create_asset_attributes(host))
   end
-  
+
   def create_asset_attributes(host)
     [
       {
