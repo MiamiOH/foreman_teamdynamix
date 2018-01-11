@@ -7,7 +7,6 @@ module ForemanTeamdynamix
       # find host
       find_resource
 
-      return ['No TeamDynamix Asset is linked to this host'] unless @host.td_asset_id
       td_asset
 
       render partial: 'foreman_teamdynamix/hosts/team_dynamix'
@@ -20,9 +19,11 @@ module ForemanTeamdynamix
     end
 
     def td_asset
+      raise 'No TeamDynamix Asset is linked to this host' unless @host.td_asset_id
       @asset = td_api.get_asset(@host.td_asset_id)
     rescue StandardError => e
-      ["Error getting asset Data from Team Dynamix: #{e.message}"]
+      @error = "Error getting asset Data: #{e.message}"
+      Foreman::Logging.exception('Error getting asset Data', e)
     end
 
     def action_permission

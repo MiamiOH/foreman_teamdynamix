@@ -18,8 +18,8 @@ def get_nested_asset_attribs_val config
   nested_attrib_fields = []
   config.each do |tag, nested_attrib|
     parent_attrib, child_attrib = nested_attrib.split(".'")
-    child_attrib.gsub!(/'/, '')
-    attrib_val = sample_asset[parent_attrib].select{|attrib| attrib['Name'] == child_attrib}[0]['Value']
+    child_attrib.delete!("'")
+    attrib_val = sample_asset[parent_attrib].select { |attrib| attrib['Name'] == child_attrib }[0]['Value']
     nested_attrib_fields << [tag, attrib_val]
   end
   nested_attrib_fields

@@ -26,8 +26,11 @@ module ForemanTeamdynamix
 
     def get_nested_attrib_val nested_attrib
       parent_attrib, child_attrib = nested_attrib.split(".'")
-      child_attrib.gsub!(/'/, '')
-      asset_attrib = @asset[parent_attrib].select { |attrib| attrib['Name'] == child_attrib }
+      raise("Invalid configuration '#{nested_attrib}' for Asset field") unless child_attrib
+      child_attrib.delete!("'")
+      parent_attrib_val = @asset[parent_attrib]
+      raise("Asset does not have an attribute '#{parent_attrib}''") unless parent_attrib_val
+      asset_attrib = parent_attrib_val.select { |attrib| attrib['Name'] == child_attrib }
       return '' unless asset_attrib.present?
       asset_attrib[0]['Value']
     end

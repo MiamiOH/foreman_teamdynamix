@@ -5,17 +5,24 @@
     </tr>
   </thead>
   <tbody>
-    <tr>
-      <td>URL</td>
-      <td>
-        <a href="<%= td_asset_uri %>" target="_blank"><%= @asset['Uri'] %></a>
-      </td>
-    </tr>
-    <% teamdynamix_fields.each do |name, value| %>
+    <% if @error %>
       <tr>
-        <td><%= name %></td>
-        <td><%= value %></td>
+        <td><%= @error %></td>
       </tr>
+    <% end %>
+    <% if @asset %>
+      <tr>
+        <td>URL</td>
+        <td>
+          <a href="<%= td_asset_uri %>" target="_blank"><%= @asset['Uri'] %></a>
+        </td>
+      </tr>
+      <% teamdynamix_fields.each do |name, value| %>
+        <tr>
+          <td><%= name %></td>
+          <td><%= value %></td>
+        </tr>
+      <% end %>
     <% end %>
   </tbody>
 </table>
