@@ -14,9 +14,8 @@ Metrics/MethodLength:
 
 Metrics/LineLength:
   Max: 111 # TODO: discuss and set this
-
-Style/Next:
-  Enabled: false
+  Exclude:
+    - 'test/**/*.rb'
 
 # Support both ruby19 and hash_rockets
 Style/HashSyntax:
@@ -24,3 +23,9 @@ Style/HashSyntax:
 
 Style/FrozenStringLiteralComment:
   Enabled: false
+
+Style/BlockLength:
+  Exclude:
+    - 'Rakefile'
+    - '**/*.rake'
+    - 'test/**/*.rb'
