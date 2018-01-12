@@ -3,13 +3,14 @@ module ForemanTeamdynamix
     extend ActiveSupport::Concern
     DEFAULT_TD_PANE_FIELDS = { 'Asset ID': 'ID', 'Owner': 'OwningCustomerName', 'Parent Asset': 'ParentID' }
 
-    def td_tab_title
-      SETTINGS[:team_dynamix][:title] || 'Team Dynamix'
+    def teamdynamix_title
+      SETTINGS[:teamdynamix][:title] || 'Team Dynamix'
     end
 
     def teamdynamix_fields(host)
-      td_pane_fields = SETTINGS[:team_dynamix][:fields] || DEFAULT_TD_PANE_FIELDS
-      @asset = TeamDynamixApi.get_asset(host.asset_id)
+      td_pane_fields = SETTINGS[:teamdynamix][:fields] || DEFAULT_TD_PANE_FIELDS
+      return [[_('Asset'), 'None Associated']] unless host.teamdynamix_asset_id
+      @asset = TeamDynamixApi.new.get_asset(host.teamdynamix_asset_id)
 
       fields = []
       td_pane_fields.each do |field_name, asset_attr|
@@ -18,7 +19,7 @@ module ForemanTeamdynamix
       end
       fields
     rescue StandardError => e
-      ['Error': "Error getting asset Data form Team Dynamix: #{e.message}"]
+      [[_('Error'), e.message]]
     end
   end
 end

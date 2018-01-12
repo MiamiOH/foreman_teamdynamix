@@ -6,7 +6,7 @@ class HostsControllerTest < ActionController::TestCase
   let(:host) { FactoryBot.create(:host, mac: '00:00:00:00:00:00', ip: '127.0.0.1', operatingsystem: os, arch: arch) }
   let(:asset) { FakeTDApi.asset }
   let(:default_TD_fields) { { 'Asset ID': asset['ID'], 'Owner': asset['OwningCustomerName'], 'Parent Asset': asset['ParentID'], 'mu.ci.Description': 'to be discussed', 'Ticket Routing Details': 'to be discussed' } }
-  let(:td_tab_title) { SETTINGS[:team_dynamix][:title] || 'Team Dynamix' }
+  let(:td_tab_title) { SETTINGS[:teamdynamix][:title] || 'Team Dynamix' }
   
   # rubocop:disable Metrics/LineLength, Style/StringLiterals, HttpPositionalArguments
   describe 'Given host exist as an asset in TeamDynamix' do
@@ -17,13 +17,13 @@ class HostsControllerTest < ActionController::TestCase
           assert_includes response.headers['Content-Type'], 'text/html'
           assert_includes response.body, "<ul id=\"myTab\""
           assert_equal response.status, 200
-          assert_includes response.body, "<li><a href=\"#team_dynamix\" data-toggle=\"tab\">#{td_tab_title}</a></li>"
-          assert_includes response.body, "<div id=\"team_dynamix\" class=\"tab-pane\" data-ajax-url=\"/hosts/#{host.name}/team_dynamix\" data-on-complete=\"onContentLoad\">"
+          assert_includes response.body, "<li><a href=\"#teamdynamix\" data-toggle=\"tab\">#{td_tab_title}</a></li>"
+          assert_includes response.body, "<div id=\"teamdynamix\" class=\"tab-pane\" data-ajax-url=\"/hosts/#{host.name}/teamdynamix\" data-on-complete=\"onContentLoad\">"
         end
         test 'TeamDynamix tab contains configured asset attributes' do
           # skip()
-          get hosts_team_dynamix_path, { :id => host.name }, set_session_user
-          assert_template 'foreman_team_dynamix'
+          get hosts_teamdynamix_path, { :id => host.name }, set_session_user
+          assert_template 'foreman_teamdynamix'
         end
       end
     end

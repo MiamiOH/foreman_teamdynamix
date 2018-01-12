@@ -16,5 +16,5 @@ Gem::Specification.new do |s|
   s.test_files = Dir['test/**/*']
   s.add_development_dependency 'rdoc'
   s.add_development_dependency 'rubocop'
-  s.add_dependency 'deface', '>=1.2.0', '< 2.0'
+  s.add_dependency 'deface', '< 2.0'
 end

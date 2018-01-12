@@ -1,7 +1,7 @@
 # This calls the main test_helper in Foreman-core
-SETTINGS[:team_dynamix] = { appID: 'testAppID',
+SETTINGS[:teamdynamix] = { appID: 'testAppID',
                             fields: {} }
-require 'fake_team_dynamix_api'
+require 'fake_teamdynamix_api'
 
 require 'test_helper'
 # Add plugin to FactoryBot's paths

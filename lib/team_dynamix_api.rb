@@ -1,13 +1,13 @@
 require 'net/http'
 class TeamDynamixApi
-  if SETTINGS[:team_dynamix].blank?
+  if SETTINGS[:teamdynamix].blank?
     raise('Missing configurations for the plugin see https://github.com/MiamiOH/foreman_teamdynamix')
   end
-  if SETTINGS[:team_dynamix][:appID].blank?
+  if SETTINGS[:teamdynamix][:appID].blank?
     raise('Missing AppID in plugin settings')
   end
-  TD_APP_ID = SETTINGS[:team_dynamix][:appID]
-  TD_API_URL = SETTINGS[:team_dynamix][:apiUrl] || 'https://api.teamdynamix.com/TDWebApi/api'
+  TD_APP_ID = SETTINGS[:teamdynamix][:appID]
+  TD_API_URL = SETTINGS[:teamdynamix][:apiUrl] || 'https://api.teamdynamix.com/TDWebApi/api'
 
   def self.get_asset(asset_id)
     url = TD_API_URL + "/#{TD_APP_ID}/assets/#{asset_id}" # URI.parse

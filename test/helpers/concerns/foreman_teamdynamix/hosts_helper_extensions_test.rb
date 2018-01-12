@@ -17,15 +17,15 @@ class HostsHelperExtensionsTest < ActiveSupport::TestCase
   end
 
   describe '#td_tab_title' do
-    title_orig = SETTINGS[:team_dynamix][:title]
+    title_orig = SETTINGS[:teamdynamix][:title]
     test 'returns correct title' do
       assert_equal td_tab_title, title_orig
     end
 
     test 'settings title is not present' do
-      SETTINGS[:team_dynamix][:title] = nil
+      SETTINGS[:teamdynamix][:title] = nil
       assert_equal td_tab_title, 'Team Dynamix'
-      SETTINGS[:team_dynamix][:title] = title_orig
+      SETTINGS[:teamdynamix][:title] = title_orig
     end
   end
 end

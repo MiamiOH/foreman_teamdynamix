@@ -1,3 +1,4 @@
+require 'deface'
 module ForemanTeamdynamix
   class Engine < ::Rails::Engine
     engine_name 'foreman_teamdynamix'
@@ -15,7 +16,7 @@ module ForemanTeamdynamix
         # Add permissions
         security_block :foreman_teamdynamix do
           permission :view_hosts,
-                     { :hosts => [:team_dynamix] },
+                     { :hosts => [:teamdynamix] },
                      :resource_type => 'Host'
         end
       end

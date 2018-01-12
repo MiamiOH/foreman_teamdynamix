@@ -2,7 +2,7 @@ Rails.application.routes.draw do
   constraints(:id => %r{[^\/]+}) do
     resources :hosts do
       member do
-        get 'team_dynamix'
+        get 'teamdynamix'
       end
     end
   end

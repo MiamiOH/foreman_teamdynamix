@@ -3,15 +3,17 @@ module ForemanTeamdynamix
   module HostsControllerExtensions
     extend ActiveSupport::Concern
 
-    def team_dynamix
+    def teamdynamix
       find_resource
-      render partial: 'foreman_teamdynamix/hosts/team_dynamix', :locals => { :host => @host }
+      render partial: 'foreman_teamdynamix/hosts/teamdynamix', :locals => { :host => @host }
+    rescue ActionView::Template::Error => exception
+      process_ajax_error exception, 'fetch teamdynamix tab information'
     end
 
     private
 
     def action_permission
-      if params[:action] == 'team_dynamix'
+      if params[:action] == 'teamdynamix'
         :view
       else
         super

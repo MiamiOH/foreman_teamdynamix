@@ -1,7 +1,7 @@
-if SETTINGS[:team_dynamix]
+if SETTINGS[:teamdynamix]
   Deface::Override.new(:virtual_path => 'hosts/show',
                        :name => 'add_tab_link',
                        :insert_bottom => 'ul#myTab',
                        :text =>
-                       "<li><a href='#team_dynamix' data-toggle='tab'><%= _(td_tab_title) %></a></li>")
+                       "<li><a href='#teamdynamix' data-toggle='tab'><%= _(teamdynamix_title) %></a></li>")
 end
