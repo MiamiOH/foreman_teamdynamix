@@ -21,7 +21,7 @@ class HostsControllerTest < ActionController::TestCase
           assert_includes response.body, "<div id=\"teamdynamix\" class=\"tab-pane\" data-ajax-url=\"/hosts/#{host.name}/teamdynamix\" data-on-complete=\"onContentLoad\">"
         end
         test 'TeamDynamix tab contains configured asset attributes' do
-          # skip()
+          skip()
           get hosts_teamdynamix_path, { :id => host.name }, set_session_user
           assert_template 'foreman_teamdynamix'
         end
