@@ -6,7 +6,7 @@ class TeamdynamixApi
   API_CONFIG = SETTINGS[:teamdynamix][:api]
 
   if API_CONFIG[:id].blank?
-    raise('Missing Team Dynamix AppID in plugin settings')
+    raise('Missing Team Dynamix Api ID in plugin settings')
   end
   APP_ID = API_CONFIG[:id]
 
