@@ -8,6 +8,7 @@ module ForemanTeamdynamix
 
     included do
       after_validation :create_teamdynamix_asset, on: :create
+      validates :teamdynamix_asset_id, uniqueness: { :allow_blank => true }
     end
 
     private
