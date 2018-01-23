@@ -10,7 +10,7 @@ module ForemanTeamdynamix
     def teamdynamix_fields(host)
       td_pane_fields = SETTINGS[:teamdynamix][:fields] || DEFAULT_TD_PANE_FIELDS
       return [[_('Asset'), 'None Associated']] unless host.teamdynamix_asset_id
-      @asset = TeamDynamixApi.new.get_asset(host.teamdynamix_asset_id)
+      @asset = host.td_api.get_asset(host.teamdynamix_asset_id)
 
       fields = []
       td_pane_fields.each do |field_name, asset_attr|
