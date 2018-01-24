@@ -1,6 +1,7 @@
 require 'test_plugin_helper'
 
 class HostsHelperExtensionsTest < ActiveSupport::TestCase
+  include ActionView::Helpers::UrlHelper
   include ForemanTeamdynamix::HostsHelperExtensions
   let(:host) { FactoryBot.create(:host, :managed) }
   let(:td_api) { FakeTeamdynamixApi.new }

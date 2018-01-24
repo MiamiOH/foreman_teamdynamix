@@ -29,8 +29,7 @@ module ForemanTeamdynamix
     def get_asset_uri
       api_url = SETTINGS[:teamdynamix][:api][:url]
       asset_uri = api_url.split('api').first + @asset['Uri']
-      actual_link = "<a href='#{asset_uri}' target='_blank'>#{@asset['Uri']}</a>"
-      ['URI', actual_link.html_safe]
+      [_('URI'), link_to(@asset['Uri'], asset_uri, {target: '_blank'})]
     end
 
     def get_teamdynamix_asset(asset_id)

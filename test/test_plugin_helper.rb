@@ -28,8 +28,7 @@ end
 def get_sample_asset_uri
   api_url = SETTINGS[:teamdynamix][:api][:url]
   asset_uri = api_url.split('api').first + sample_asset['Uri']
-  actual_link = "<a href='#{asset_uri}' target='_blank'>#{sample_asset['Uri']}</a>"
-  ['URI', actual_link]
+  [_('URI'), link_to(sample_asset['Uri'], asset_uri, {target: '_blank'})]
 end
 
 require 'fake_teamdynamix_api'
