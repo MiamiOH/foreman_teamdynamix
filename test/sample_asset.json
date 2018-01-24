@@ -57,7 +57,7 @@
           "Choices": [],
           "IsRequired": false,
           "IsUpdatable": true,
-          "Value": "",
+          "Value": "sample",
           "ValueText": "",
           "ChoicesText": "",
           "AssociatedItemIDs": [
@@ -76,7 +76,7 @@
           "Choices": [],
           "IsRequired": false,
           "IsUpdatable": false,
-          "Value": "",
+          "Value": "sample",
           "ValueText": "",
           "ChoicesText": "",
           "AssociatedItemIDs": [

@@ -18,7 +18,7 @@ module ForemanTeamdynamix
 
       td_pane_fields.each do |field_name, asset_attr|
         asset_attr_val = @asset.has_key?(asset_attr) ? @asset[asset_attr] : get_nested_attrib_val(asset_attr)
-        fields += [[_(field_name.to_s), asset_attr_val]]
+        fields += [[_(field_name.to_s), asset_attr_val]] if asset_attr_val.present?
       end
       fields
     rescue StandardError => e
@@ -39,14 +39,16 @@ module ForemanTeamdynamix
     end
 
     def get_nested_attrib_val nested_attrib
-      parent_attrib, child_attrib = nested_attrib.split(".'")
-      raise("Invalid configuration '#{nested_attrib}' for Asset field") unless child_attrib
+      nested_attrib_tokens = nested_attrib.split(".")
+      parent_attrib = nested_attrib_tokens.first
+      child_attrib = nested_attrib_tokens[1..nested_attrib_tokens.length].join('.')
+      return '' if (parent_attrib.blank? || child_attrib.blank?)
       child_attrib.delete!("'")
       parent_attrib_val = @asset[parent_attrib]
-      raise("Asset does not have an attribute '#{parent_attrib}''") unless parent_attrib_val
-      asset_attrib = parent_attrib_val.select { |attrib| attrib['Name'] == child_attrib }
-      return '' unless asset_attrib.present?
-      asset_attrib[0]['Value']
+      return '' unless parent_attrib_val.present?
+      nested_attrib_val = parent_attrib_val.select { |attrib| attrib['Name'] == child_attrib }
+      return '' unless nested_attrib_val.present?
+      nested_attrib_val[0]['Value']
     end
   end
 end
