@@ -2,8 +2,9 @@
 A Foreman Plugin for TeamDynamix. It manages a host lifecycle as a corresponding Asset in TeamDynamix.
 
 ## Configuration
-[:api][:create]
-* All attributes are passed as is to the Team Dynamix API while creating an asset for the Foreman host.
+[:api][:create] or [:delete]
+* All attributes are passed as is to the TeamDynamix API while creating or deleting a TeamDynamix Asset.
+* An asset gets created or deleted with the Foreman Host create or delete lifecycle event.
 
 [:fields]
 * A link to the asset in Teamdynamix is displayed by default, as first field labelled as URI
@@ -20,6 +21,8 @@ A Foreman Plugin for TeamDynamix. It manages a host lifecycle as a corresponding
     :create:
       :StatusID: integer_id
       :OwningCustomerName: string
+    :delete
+      :StatusID: integer_id
   :title: 'custom title for Team Dynamix Tab'
   :fields:
     Asset ID: ID
