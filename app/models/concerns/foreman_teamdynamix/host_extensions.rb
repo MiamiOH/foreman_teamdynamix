@@ -3,7 +3,7 @@ module ForemanTeamdynamix
     extend ActiveSupport::Concern
 
     def td_api
-      @td_api ||= TeamdynamixApi.new
+      @td_api ||= TeamdynamixApi.instance
     end
 
     included do

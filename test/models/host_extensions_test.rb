@@ -31,12 +31,7 @@ class HostExtensionsTests < ActiveSupport::TestCase
     end
 
     it 'calls Teamdynamix API to retire an asset' do
-      assert_send([td_api, :retire_asset, host.td_asset_id])
-    end
-
-    it 'sets host#StatusID' do
-      skip('this need actual api interaction')
-      assert(host.td_asset_id, SETTINGS[:teamdynamix][:api][:delete][:StatusID])
+      assert_send([td_api, :retire_asset, host.teamdynamix_asset_id])
     end
   end
 

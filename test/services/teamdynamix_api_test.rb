@@ -2,7 +2,7 @@ require 'test_plugin_helper'
 # rubocop:disable Metrics/ClassLength
 class TeamdynamixApiTest < ActiveSupport::TestCase
   # rubocop:enable Metrics/ClassLength
-  let(:subject) { TeamdynamixApi.new }
+  let(:subject) { TeamdynamixApi.instance }
   let(:api_config) { SETTINGS[:teamdynamix][:api] }
   let(:app_id) { api_config[:id] }
   let(:api_url) { api_config[:url] }
@@ -80,7 +80,7 @@ class TeamdynamixApiTest < ActiveSupport::TestCase
         asset_ci_desc = asset['Attributes'].select { |attrib| attrib['Name'] == 'mu.ci.Description' }[0]['Value']
         assert_equal(asset_ci_desc, asset_ci_desc_expectation)
         asset_ci_lifecycle_status = asset['Attributes'].select { |attrib| attrib['Name'] == 'mu.ci.Lifecycle Status' }[0]['Value']
-        assert_equal(asset_ci_lifecycle_status.to_s, subject.send(:get_lifecycle_status).to_s)
+        assert_equal(asset_ci_lifecycle_status.to_s, subject.send(:lifecycle_status).to_s)
       end
     end
 
@@ -104,11 +104,11 @@ class TeamdynamixApiTest < ActiveSupport::TestCase
     end
   end
 
-  describe '#auth_token' do
+  describe '#request_token' do
     describe 'valida credentials' do
     end
     it 'returns a bearer token if credentials are correct' do
-      assert_not_nil(subject.send(:auth_token))
+      assert_not_nil(subject.send(:request_token))
     end
 
     describe 'invalid credentials' do
@@ -123,7 +123,7 @@ class TeamdynamixApiTest < ActiveSupport::TestCase
       end
       it 'raises error with status 403' do
         assert_raises_with_message(RuntimeError, error) do
-          subject.send(:auth_token)
+          subject.send(:request_token)
         end
       end
     end
