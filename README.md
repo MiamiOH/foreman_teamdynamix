@@ -37,3 +37,6 @@ A Foreman Plugin for TeamDynamix. It manages a host lifecycle as a corresponding
 
 ## Add additional host attirbute
 rake db:migrate
+
+## Development
+gem install foreman_teamdynamix --dev

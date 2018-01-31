@@ -1,6 +1,6 @@
 {
   "ID": 1111,
-  "AppID": 730,
+  "AppID": 111,
   "AppName": "Assets/CIs",
   "ProductModelID": 1070,
   "ProductModelName": "Application/Software",
@@ -15,7 +15,7 @@
   "LocationRoomID": 0,
   "LocationRoomName": "None",
   "Tag": null,
-  "SerialNumber": "Banner Advancement",
+  "SerialNumber": "delete.foreman_teamdynamix.com",
   "Name": "delete.foreman_teamdynamix.com",
   "PurchaseCost": 0,
   "AcquisitionDate": "0001-01-01T05:00:00Z",
@@ -76,7 +76,7 @@
           "Choices": [],
           "IsRequired": false,
           "IsUpdatable": false,
-          "Value": "sample",
+          "Value": "Foreman host delete.foreman_teamdynamix.com created by ForemanTeamdynamix plugin",
           "ValueText": "",
           "ChoicesText": "",
           "AssociatedItemIDs": [
@@ -136,7 +136,7 @@
           ],
           "IsRequired": true,
           "IsUpdatable": false,
-          "Value": "26193",
+          "Value": "26190",
           "ValueText": "Production",
           "ChoicesText": "Production",
           "AssociatedItemIDs": [

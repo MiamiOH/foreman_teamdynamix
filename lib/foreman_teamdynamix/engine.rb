@@ -7,7 +7,6 @@ module ForemanTeamdynamix
     config.autoload_paths += Dir["#{config.root}/app/helpers/concerns"]
     config.autoload_paths += Dir["#{config.root}/app/models/concerns"]
     config.autoload_paths += Dir["#{config.root}/app/overrides"]
-    config.autoload_paths += Dir["#{config.root}/lib"]
 
     initializer 'foreman_teamdynamix.load_app_instance_data' do |app|
       if ForemanTeamdynamix::Engine.paths['db/migrate'].existent
