@@ -1,19 +1,24 @@
 require 'net/http'
+# rubocop:disable Metrics/ClassLength
 class TeamdynamixApi
+  # rubocop:enable Metrics/ClassLength
+  include Singleton
+
   if SETTINGS[:teamdynamix].blank?
     raise('Missing configurations for the plugin see https://github.com/MiamiOH/foreman_teamdynamix')
   end
   API_CONFIG = SETTINGS[:teamdynamix][:api]
 
-  if API_CONFIG[:id].blank?
-    raise('Missing Team Dynamix Api ID in plugin settings')
-  end
+  raise('Missing Team Dynamix Api ID in plugin settings') if API_CONFIG[:id].blank?
   APP_ID = API_CONFIG[:id]
 
-  if API_CONFIG[:url].blank?
-    raise('Missing Team Dynamix API URL in plugin settings')
-  end
+  raise('Missing Team Dynamix API URL in plugin settings') if API_CONFIG[:url].blank?
   API_URL = API_CONFIG[:url]
+
+  def initialize
+    @auth_token = request_token
+    raise("Invalid authentication token") unless valid_auth_token?(@auth_token)
+  end
 
   # returns TeamDynamix.Api.Assets.Asset
   def get_asset(asset_id)
@@ -51,7 +56,7 @@ class TeamdynamixApi
       req = Net::HTTP::Get.new(uri)
     end
     # set headers
-    req.add_field('Authorization', 'Bearer ' + auth_token)
+    req.add_field('Authorization', 'Bearer ' + @auth_token)
     # send request
     res = http.start do |http_handler|
       http_handler.request(req)
@@ -60,8 +65,7 @@ class TeamdynamixApi
     parse_response(res)
   end
 
-  def auth_token
-    return @auth_token if @auth_token
+  def request_token
     uri = URI.parse(API_URL + '/auth')
     http = Net::HTTP.new(uri.host, uri.port)
     http.use_ssl = true
@@ -77,8 +81,7 @@ class TeamdynamixApi
       http_handler.request(req)
     end
     # return response
-    token = parse_response(res)
-    valid_auth_token?(token) ? @auth_token = token : raise("Invalid auth token #{token}")
+    parse_response(res)
   end
 
   def parse_response(res)
@@ -103,12 +106,11 @@ class TeamdynamixApi
     asset.merge!(API_CONFIG[:delete].stringify_keys)
   end
 
-  def create_asset_payload host
+  def create_asset_payload(host)
     ensure_configured_create_params
-    payload = { AppID: APP_ID, 
+    payload = { AppID: APP_ID,
                 SerialNumber: host.name,
-                Name: host.fqdn
-              }
+                Name: host.fqdn }
     payload.merge!(API_CONFIG[:create].stringify_keys)
     payload.merge(Attributes: create_asset_attributes(host))
   end
@@ -116,25 +118,25 @@ class TeamdynamixApi
   def create_asset_attributes(host)
     [
       {
-        ID: 11632,
+        ID: 11_632,
         Name: 'mu.ci.Description',
         Value: "Foreman host #{host.fqdn} created by ForemanTeamdynamix plugin"
       },
       {
-        ID: 11634,
+        ID: 11_634,
         Name: 'mu.ci.Lifecycle Status',
-        Value: get_lifecycle_status
+        Value: lifecycle_status
       }
     ]
   end
 
-  def get_lifecycle_status
+  def lifecycle_status
     case Rails.env.downcase
-    when 'test' then 26190
-    when 'development' then 26191
-    when 'stage', 'pre-production' then 26192
-    when 'early-life-support' then 26194
-    when 'production' then 26193
+    when 'test' then 26_190
+    when 'development' then 26_191
+    when 'stage', 'pre-production' then 26_192
+    when 'early-life-support' then 26_194
+    when 'production' then 26_193
     end
   end
 
@@ -144,7 +146,9 @@ class TeamdynamixApi
 
   def ensure_configured_create_params
     must_configure_create_params.each do |must_configure_param|
-      raise("#{must_configure_param} is required. Set it as a configuration item.") unless API_CONFIG[:create].include?(must_configure_param)
+      unless API_CONFIG[:create].include?(must_configure_param)
+        raise("#{must_configure_param} is required. Set it as a configuration item.")
+      end
     end
   end
 end
