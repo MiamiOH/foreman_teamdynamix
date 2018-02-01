@@ -1,7 +1,5 @@
 require 'net/http'
-# rubocop:disable Metrics/ClassLength
 class TeamdynamixApi
-  # rubocop:enable Metrics/ClassLength
   include Singleton
 
   if SETTINGS[:teamdynamix].blank?
@@ -17,7 +15,7 @@ class TeamdynamixApi
 
   def initialize
     @auth_token = request_token
-    raise("Invalid authentication token") unless valid_auth_token?(@auth_token)
+    raise('Invalid authentication token') unless valid_auth_token?(@auth_token)
   end
 
   # returns TeamDynamix.Api.Assets.Asset
@@ -111,33 +109,12 @@ class TeamdynamixApi
     payload = { AppID: APP_ID,
                 SerialNumber: host.name,
                 Name: host.fqdn }
-    payload.merge!(API_CONFIG[:create].stringify_keys)
-    payload.merge(Attributes: create_asset_attributes(host))
-  end
 
-  def create_asset_attributes(host)
-    [
-      {
-        ID: 11_632,
-        Name: 'mu.ci.Description',
-        Value: "Foreman host #{host.fqdn} created by ForemanTeamdynamix plugin"
-      },
-      {
-        ID: 11_634,
-        Name: 'mu.ci.Lifecycle Status',
-        Value: lifecycle_status
-      }
-    ]
-  end
-
-  def lifecycle_status
-    case Rails.env.downcase
-    when 'test' then 26_190
-    when 'development' then 26_191
-    when 'stage', 'pre-production' then 26_192
-    when 'early-life-support' then 26_194
-    when 'production' then 26_193
-    end
+    config_attributes = API_CONFIG[:create].symbolize_keys
+    custom_attributes = config_attributes[:CustomAttributes]
+    payload[:Attributes] = custom_attributes.values if custom_attributes.present?
+    config_attributes.delete(:CustomAttributes)
+    payload.merge!(config_attributes)
   end
 
   def must_configure_create_params

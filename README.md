@@ -6,6 +6,13 @@ A Foreman Plugin for TeamDynamix. It manages a host lifecycle as a corresponding
 * All attributes are passed as is to the TeamDynamix API while creating or deleting a TeamDynamix Asset.
 * An asset gets created or deleted with the Foreman Host create or delete lifecycle event.
 
+[:api][:create][:CustomAttributes]
+* To configure any [Custom Attributes](https://miamioh.teamdynamix.com/SBTDWebApi/Home/type/TeamDynamix.Api.CustomAttributes.CustomAttribute) for the asset.
+* Custom attribute name must match exactly as in API.
+* It must contain expected value for 'id' and 'value' fields.
+* rest of the fields are optional, check the Custom Attribute's definition for what other fields are updatable.
+* String interpolation is not suppored for CustomAttribute fields.
+
 [:fields]
 * A link to the asset in Teamdynamix is displayed by default, as first field labelled as URI
 * Nested attributes can be configured as mentioned in example configuration below.
@@ -21,6 +28,10 @@ A Foreman Plugin for TeamDynamix. It manages a host lifecycle as a corresponding
     :create:
       :StatusID: integer_id
       :OwningCustomerName: string
+      :CustomAttributes:
+        custom attribute name:
+          id: integer_id
+          value: integer or string value
     :delete
       :StatusID: integer_id
   :title: 'custom title for Team Dynamix Tab'
