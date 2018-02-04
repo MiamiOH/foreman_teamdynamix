@@ -11,7 +11,7 @@ A Foreman Plugin for TeamDynamix. It manages a host lifecycle as a corresponding
 * Custom attribute name must match exactly as in API.
 * It must contain expected value for 'id' and 'value' fields.
 * rest of the fields are optional, check the Custom Attribute's definition for what other fields are updatable.
-* String interpolation is not suppored for CustomAttribute fields.
+* String interpolation is suppored only for Host instance attributes and is restricted to readonly.
 
 [:fields]
 * A link to the asset in Teamdynamix is displayed by default, as first field labelled as URI
@@ -32,6 +32,9 @@ A Foreman Plugin for TeamDynamix. It manages a host lifecycle as a corresponding
         custom attribute name:
           id: integer_id
           value: integer or string value
+        custom attribute dynamic value:
+          id: integer_id
+          value: "lorem ipsum #{host.host_attribute_name}"
     :delete
       :StatusID: integer_id
   :title: 'custom title for Team Dynamix Tab'
