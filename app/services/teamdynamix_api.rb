@@ -138,7 +138,7 @@ class TeamdynamixApi
 
   def update_asset_payload(host)
     payload = { ID: host.teamdynamix_asset_id }
-    payload.merge!(create_asset_payload(host))
+    payload.merge(create_asset_payload(host))
   end
 
   def ensure_configured_create_params

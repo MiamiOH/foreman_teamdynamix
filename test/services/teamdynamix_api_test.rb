@@ -13,12 +13,50 @@ class TeamdynamixApiTest < ActiveSupport::TestCase
   let(:sample_asset_id) { sample_asset['ID'].to_s }
   let(:host_name) { 'delete.foreman_teamdynamix.com' }
   let(:get_asset_path) { api_url + '/' + app_id + '/assets/' + sample_asset_id }
+  let(:create_status_id) { 641 }
+  let(:custom_attributes) do
+    [{ 'name' => 'mu.ci.Lifecycle Status', 'id' => 11_634, 'value' => '26193' },
+     { 'name' => 'mu.ci.Description', 'id' => 11_632, 'value' => 'Foreman host created by ForemanTeamdynamix plugin' }]
+  end
+  let(:create_path) { api_url + '/' + app_id + '/assets' }
+  let(:create_payload) do
+    { AppID: app_id,
+      SerialNumber: host_name,
+      Name: host_name,
+      StatusID: create_status_id,
+      Attributes: custom_attributes }
+  end
   before do
     stub_request(:post, api_url + '/auth')
       .with(body: auth_payload,
             headers: { 'Content-Type' => 'application/json' })
       .to_return(status: 200, body: dummy_token)
     host.name = host_name
+  end
+
+  describe '#update_asset' do
+    let(:update_path) { get_asset_path }
+    let(:update_payload) { { ID: host.teamdynamix_asset_id }.merge!(create_payload) }
+    before do
+      host.teamdynamix_asset_id = sample_asset_id
+      SETTINGS[:teamdynamix][:api][:create] = { StatusID: create_status_id,
+                                                Attributes: custom_attributes }
+    end
+    context 'Valid Request' do
+      before do
+        stub_request(:post, update_path)
+          .with(headers: { 'Authorization' => 'Bearer ' + dummy_token,
+                           'Content-Type' => 'application/json' },
+                body: update_payload)
+          .to_return(status: 200, body: sample_asset.to_json)
+      end
+      it 'successfully creates an asset and return it' do
+        asset = subject.update_asset(host)
+        assert_equal(asset['SerialNumber'], host.name)
+        assert_equal(asset['AppID'].to_s, app_id.to_s)
+        assert_equal(asset['StatusID'], create_status_id)
+      end
+    end
   end
 
   describe '#retire_asset' do
@@ -46,19 +84,6 @@ class TeamdynamixApiTest < ActiveSupport::TestCase
   end
 
   describe '#create_asset' do
-    let(:create_status_id) { 641 }
-    let(:custom_attributes) do
-      [{ 'name' => 'mu.ci.Lifecycle Status', 'id' => 11_634, 'value' => '26193' },
-       { 'name' => 'mu.ci.Description', 'id' => 11_632, 'value' => 'Foreman host created by ForemanTeamdynamix plugin' }]
-    end
-    let(:create_path) { api_url + '/' + app_id + '/assets' }
-    let(:create_payload) do
-      { AppID: app_id,
-        SerialNumber: host_name,
-        Name: host_name,
-        StatusID: create_status_id,
-        Attributes: custom_attributes }
-    end
     before do
       SETTINGS[:teamdynamix][:api][:create] = { StatusID: create_status_id,
                                                 Attributes: custom_attributes }
