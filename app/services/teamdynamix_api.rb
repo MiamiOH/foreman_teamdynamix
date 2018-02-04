@@ -24,9 +24,18 @@ class TeamdynamixApi
     rest(:get, uri)
   end
 
+  def asset_exist?(asset_id)
+    get_asset(asset_id).present?
+  end
+
   def create_asset(host)
     uri = URI.parse(API_URL + "/#{APP_ID}/assets")
     rest(:post, uri, create_asset_payload(host))
+  end
+
+  def update_asset(host)
+    uri = URI.parse(API_URL + "/#{APP_ID}/assets/#{host.teamdynamix_asset_id}")
+    rest(:post, uri, update_asset_payload(host))
   end
 
   def retire_asset(asset_id)
@@ -125,6 +134,11 @@ class TeamdynamixApi
 
   def valid_auth_token?(token)
     token.match(/^[a-zA-Z0-9\.\-\_]*$/)
+  end
+
+  def update_asset_payload(host)
+    payload = { ID: host.teamdynamix_asset_id }
+    payload.merge!(create_asset_payload(host))
   end
 
   def ensure_configured_create_params
