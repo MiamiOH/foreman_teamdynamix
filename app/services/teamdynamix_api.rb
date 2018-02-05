@@ -1,7 +1,6 @@
 require 'net/http'
 class TeamdynamixApi
   include Singleton
-  include ServiceHelper
 
   if SETTINGS[:teamdynamix].blank?
     raise('Missing configurations for the plugin see https://github.com/MiamiOH/foreman_teamdynamix')
@@ -98,21 +97,34 @@ class TeamdynamixApi
 
   def retire_asset_payload(asset_id)
     asset = get_asset(asset_id)
-    asset.merge!(API_CONFIG[:delete].stringify_keys)
+    asset.merge(API_CONFIG[:delete].stringify_keys)
   end
 
   def create_asset_payload(host)
-    @host = host
     ensure_configured_create_params
-    payload = { AppID: APP_ID,
-                SerialNumber: host.name,
-                Name: host.fqdn }
+    default_attrs = { AppID: APP_ID,
+                      SerialNumber: host.name,
+                      Name: host.fqdn }
+    create_attrs = API_CONFIG[:create].symbolize_keys
+    evaluate_attributes(host, create_attrs)
+    default_attrs.merge(create_attrs)
+  end
 
-    config_attrs = API_CONFIG[:create].symbolize_keys
-    custom_attrs = config_attrs[:CustomAttributes]
-    payload[:Attributes] = custom_attr_fields(host, custom_attrs) if custom_attrs.present?
-    config_attrs.delete(:CustomAttributes)
-    payload.merge!(config_attrs)
+  def evaluate_attributes(host, create_attrs)
+    if create_attrs[:Attributes].present?
+      create_attrs[:Attributes].each do |attribute|
+        attribute.transform_keys!(&:downcase)
+        attribute['value'] = eval("\"#{attribute['value']}\"")
+      end
+    end
+  end
+
+  def must_configure_create_params
+    [:StatusID]
+  end
+
+  def valid_auth_token?(token)
+    token.match(/^[a-zA-Z0-9\.\-\_]*$/)
   end
 
   def ensure_configured_create_params

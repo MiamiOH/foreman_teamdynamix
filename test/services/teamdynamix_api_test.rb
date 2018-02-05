@@ -48,8 +48,8 @@ class TeamdynamixApiTest < ActiveSupport::TestCase
   describe '#create_asset' do
     let(:create_status_id) { 641 }
     let(:custom_attributes) do
-      { 'mu.ci.Lifecycle Status' => { 'id' => 11_634, 'value' => 26_193 },
-        'mu.ci.Description' => { 'id' => 11_632, 'value' => 'Foreman host created by ForemanTeamdynamix plugin' } }
+      [{ 'name' => 'mu.ci.Lifecycle Status', 'id' => 11_634, 'value' => '26193' },
+       { 'name' => 'mu.ci.Description', 'id' => 11_632, 'value' => 'Foreman host created by ForemanTeamdynamix plugin' }]
     end
     let(:create_path) { api_url + '/' + app_id + '/assets' }
     let(:create_payload) do
@@ -57,11 +57,11 @@ class TeamdynamixApiTest < ActiveSupport::TestCase
         SerialNumber: host_name,
         Name: host_name,
         StatusID: create_status_id,
-        Attributes: custom_attributes.values }
+        Attributes: custom_attributes }
     end
     before do
       SETTINGS[:teamdynamix][:api][:create] = { StatusID: create_status_id,
-                                                CustomAttributes: custom_attributes }
+                                                Attributes: custom_attributes }
     end
     context 'Valid Request' do
       before do
@@ -86,7 +86,6 @@ class TeamdynamixApiTest < ActiveSupport::TestCase
       let(:error) { { status: "400", msg: "", body: error_body }.to_json }
       # rubocop:enable Style/StringLiterals
       before do
-        puts "\n\n\n\n create_payload: #{create_payload}"
         stub_request(:post, create_path)
           .with(headers: { 'Authorization' => 'Bearer ' + dummy_token,
                            'Content-Type' => 'application/json' },
