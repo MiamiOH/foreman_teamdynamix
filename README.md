@@ -10,7 +10,7 @@ A Foreman Plugin for TeamDynamix. It manages a host lifecycle as a corresponding
 * To configure any [Custom Attributes](https://api.teamdynamix.com/TDWebApi/Home/type/TeamDynamix.Api.CustomAttributes.CustomAttribute) for the asset.
 * It must contain expected value for 'id' and 'value' fields.
 * rest of the fields are optional, check the Custom Attribute's definition for what other fields are updatable.
-* String interpolation is suppored only for Host instance attributes and is restricted to readonly.
+* String interpolation is suppored for custom attribute's value.
 
 [:fields]
 * A link to the asset in Teamdynamix is displayed by default, as first field labelled as URI
