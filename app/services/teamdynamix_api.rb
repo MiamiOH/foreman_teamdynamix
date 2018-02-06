@@ -1,7 +1,5 @@
 require 'net/http'
-# rubocop:disable Metrics/ClassLength
 class TeamdynamixApi
-  # rubocop:enable Metrics/ClassLength
   include Singleton
 
   if SETTINGS[:teamdynamix].blank?
@@ -17,7 +15,7 @@ class TeamdynamixApi
 
   def initialize
     @auth_token = request_token
-    raise("Invalid authentication token") unless valid_auth_token?(@auth_token)
+    raise('Invalid authentication token') unless valid_auth_token?(@auth_token)
   end
 
   # returns TeamDynamix.Api.Assets.Asset
@@ -97,51 +95,36 @@ class TeamdynamixApi
     end
   end
 
-  def valid_auth_token?(token)
-    token.match(/^[a-zA-Z0-9\.\-\_]*$/)
-  end
-
   def retire_asset_payload(asset_id)
     asset = get_asset(asset_id)
-    asset.merge!(API_CONFIG[:delete].stringify_keys)
+    asset.merge(API_CONFIG[:delete].stringify_keys)
   end
 
   def create_asset_payload(host)
     ensure_configured_create_params
-    payload = { AppID: APP_ID,
-                SerialNumber: host.name,
-                Name: host.fqdn }
-    payload.merge!(API_CONFIG[:create].stringify_keys)
-    payload.merge(Attributes: create_asset_attributes(host))
+    default_attrs = { AppID: APP_ID,
+                      SerialNumber: host.name,
+                      Name: host.fqdn }
+    create_attrs = API_CONFIG[:create].symbolize_keys
+    evaluate_attributes(host, create_attrs)
+    default_attrs.merge(create_attrs)
   end
 
-  def create_asset_attributes(host)
-    [
-      {
-        ID: 11_632,
-        Name: 'mu.ci.Description',
-        Value: "Foreman host #{host.fqdn} created by ForemanTeamdynamix plugin"
-      },
-      {
-        ID: 11_634,
-        Name: 'mu.ci.Lifecycle Status',
-        Value: lifecycle_status
-      }
-    ]
-  end
-
-  def lifecycle_status
-    case Rails.env.downcase
-    when 'test' then 26_190
-    when 'development' then 26_191
-    when 'stage', 'pre-production' then 26_192
-    when 'early-life-support' then 26_194
-    when 'production' then 26_193
+  def evaluate_attributes(host, create_attrs)
+    if create_attrs[:Attributes].present?
+      create_attrs[:Attributes].each do |attribute|
+        attribute.transform_keys!(&:downcase)
+        attribute['value'] = eval("\"#{attribute['value']}\"")
+      end
     end
   end
 
   def must_configure_create_params
     [:StatusID]
+  end
+
+  def valid_auth_token?(token)
+    token.match(/^[a-zA-Z0-9\.\-\_]*$/)
   end
 
   def ensure_configured_create_params

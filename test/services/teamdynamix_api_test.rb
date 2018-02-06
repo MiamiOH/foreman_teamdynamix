@@ -4,7 +4,7 @@ class TeamdynamixApiTest < ActiveSupport::TestCase
   # rubocop:enable Metrics/ClassLength
   let(:subject) { TeamdynamixApi.instance }
   let(:api_config) { SETTINGS[:teamdynamix][:api] }
-  let(:app_id) { api_config[:id] }
+  let(:app_id) { api_config[:id].to_s }
   let(:api_url) { api_config[:url] }
   let(:host) { FactoryBot.build(:host, :managed) }
   let(:auth_payload) { { username: api_config[:username], password: api_config[:password] }.to_json }
@@ -47,23 +47,23 @@ class TeamdynamixApiTest < ActiveSupport::TestCase
 
   describe '#create_asset' do
     let(:create_status_id) { 641 }
-    let(:create_path) { api_url + '/' + app_id + '/assets' }
-    let(:default_attributes) do
-      [{ ID: 11_632, Name: 'mu.ci.Description', Value: "Foreman host #{host_name} created by ForemanTeamdynamix plugin" },
-       { ID: 11_634, Name: 'mu.ci.Lifecycle Status', Value: 26_190 }]
+    let(:custom_attributes) do
+      [{ 'name' => 'mu.ci.Lifecycle Status', 'id' => 11_634, 'value' => '26193' },
+       { 'name' => 'mu.ci.Description', 'id' => 11_632, 'value' => 'Foreman host created by ForemanTeamdynamix plugin' }]
     end
+    let(:create_path) { api_url + '/' + app_id + '/assets' }
     let(:create_payload) do
       { AppID: app_id,
         SerialNumber: host_name,
         Name: host_name,
         StatusID: create_status_id,
-        Attributes: default_attributes }
+        Attributes: custom_attributes }
     end
     before do
-      SETTINGS[:teamdynamix][:api][:create] = { StatusID: create_status_id }
+      SETTINGS[:teamdynamix][:api][:create] = { StatusID: create_status_id,
+                                                Attributes: custom_attributes }
     end
     context 'Valid Request' do
-      let(:asset_ci_desc_expectation) { "Foreman host #{host.fqdn} created by ForemanTeamdynamix plugin" }
       before do
         stub_request(:post, create_path)
           .with(headers: { 'Authorization' => 'Bearer ' + dummy_token,
@@ -76,11 +76,7 @@ class TeamdynamixApiTest < ActiveSupport::TestCase
         assert_not_nil(asset['ID'])
         assert_equal(asset['SerialNumber'], host.name)
         assert_equal(asset['AppID'].to_s, app_id.to_s)
-        assert_equal(asset['StatusID'], SETTINGS[:teamdynamix][:api][:create][:StatusID])
-        asset_ci_desc = asset['Attributes'].select { |attrib| attrib['Name'] == 'mu.ci.Description' }[0]['Value']
-        assert_equal(asset_ci_desc, asset_ci_desc_expectation)
-        asset_ci_lifecycle_status = asset['Attributes'].select { |attrib| attrib['Name'] == 'mu.ci.Lifecycle Status' }[0]['Value']
-        assert_equal(asset_ci_lifecycle_status.to_s, subject.send(:lifecycle_status).to_s)
+        assert_equal(asset['StatusID'], create_status_id)
       end
     end
 

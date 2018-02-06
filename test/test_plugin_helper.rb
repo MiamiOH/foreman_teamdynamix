@@ -4,7 +4,7 @@ def override_settings
                                     username: 'a_valid_username',
                                     password: 'a_valid_pwd' } }
 end
-override_settings unless SETTINGS[:teamdynamix]
+override_settings
 
 def get_direct_asset_attribs_val(config)
   direct_attrib_fields = []
