@@ -1,39 +1,58 @@
 # foreman_teamdynamix
 A Foreman Plugin for TeamDynamix. It manages a host's life cycle as a corresponding Asset in TeamDynamix.
 
-## Configuration
+## Installation
 
-Example Configuration, add to settings.yaml
+To install foreman_teamdynamix require it in your gem file by adding the line.
+```
+gem 'foreman_teamdynamix'
+```
+Then update foreman to include the gem with the command.
+```
+bundle update foreman_teamdynamix
+```
+
+## Configuration
+To setup the configuration file create a new file named 'foreman_teamdynamix.yaml' at the location /etc/foreman/plugins/
+
+If there is no configuration file then the tab should not appear on the detailed hosts screen, but if there is one and it is empty then it will appear without any fields. 
+
+Example Configuration
 
 ```
 :teamdynamix:
   :api:
-    :url: 'td_api_url'
-    :id: 'id'
-    :username: 'username'
-    :password: 'password'
+    :url: 'https://miamioh.teamdynamix.com/SBTDWebApi/api'
+    :appId: 741
+    :username: 'xxxxxx'
+    :password: 'xxxxxx'
     :create:
-      :StatusID: integer_id
-      :attribute_name: string
+      :StatusID: 641
+      :OwningCustomerName: foreman_teamdynamix_plugin_test
       :Attributes:
-      - name: custom attribute name
-        id: integer_id
-        value: integer or string value
-      - name: custom attribute with dynamic value
-        id: integer_id
-        value: "lorem ipsum #{host.host_attribute_name}"
-    :delete
-      :StatusID: integer_id
+      - name: mu.ci.Lifecycle Status
+        id: 11634
+        value: 26190
+      - name: mu.ci.Description
+        id: 11632
+        value: "created by ForemanTeamdynamix plugin, owner is #{host.owner_id}"
+      - name: Ticket Routing Details
+        id: 11636
+        value: "Asset for host running on OS #{host.operatingsystem_id}"
+    :delete:
+      :StatusId: 642
     :search:
       AppID: 741
       StatusName: In Use
       RequestingCustomerID: 00000000-0000-0000-0000-000000000000
       OwningDepartmentID: 15798
-  :title: 'custom title for TeamDynamix Tab'
   :fields:
     Asset ID: ID
-    attribute label: Attribute_Name_as_in_asset
-    custom attribute name: Attributes.custom attribute name
+    Owner: OwningCustomerName
+    Parent Asset: ParentID
+    mu.ci.Description: Attributes.mu.ci.Description
+    Ticket Routing Details: Attributes.Ticket Routing Details
+    mu.ci.Lifecycle Status: Attributes.mu.ci.Lifecycle Status
 ```
 [:api][:create] or [:delete]
 * All attributes are passed to the TeamDynamix API as is, while creating or deleting a TeamDynamix Asset.
@@ -46,22 +65,34 @@ Example Configuration, add to settings.yaml
 * String interpolation is supported for custom attribute's value.
 
 [:fields]
+* The keys are the display title and the values are the methods that are actually called to produce the value.
 * A link to the asset in Teamdynamix is displayed by default, as first field labelled as URI.
-* Make sure the Asset Attribute Name is spelled right. Label is to label it in the TeamDynamix Tab.
 * Nested attributes i.e custom attributes can be configured as mentioned in example configuration.
 * If an attribute or nested attribute does not exist or is not found, it would simply not be displayed.
 
 ## Add additional host attribute
+```
 rake db:migrate
+```
+
+## Verify the TeamDynamix Tab is loaded
+Navigate to /hosts/, click on one of the listed host. There should be tabs: 'Properties', 'Metrics', 'Templates', 'NICs' and 'teamdynamix.title or Team Dynamix Tab'
+
+## Development mode
+foreman running locally (i.e not installed via rpm/debian package) does not use settings from /etc/foreman/plugins/
+Add the teamdynamix config to <foreman_repo>/config/settings.yaml
 
 ## Rake Task
+```
+rake hosts:sync_with_teamdynamix
+```
 Gets existing assets in TeamDynamix based on search params [:teamdynamix][:api][:search]. Then scans the hosts and sync them with TeamDynamix.
 * If host has teamdynamix_asset_id, update the corresponding TeamDynamix asset.
 * If host name matches the asset Name or SerialNumber, update the host and the corresponding TeamDynamix asset.
 * If host has no matching asset, create an asset in TeamDynamix with configured fields.
 
-It could be run as:
-* rake hosts:sync_with_teamdynamix
-
-## Development
+## Test mode
+```
 gem install foreman_teamdynamix --dev
+rake test:foreman_teamdynamix
+```

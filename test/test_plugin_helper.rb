@@ -1,6 +1,6 @@
 def override_settings
   SETTINGS[:teamdynamix] = { api: { url: 'https://api.teamdynamix.com/TDWebApi/api',
-                                    id: '111',
+                                    appId: '111',
                                     username: 'a_valid_username',
                                     password: 'a_valid_pwd' } }
 end
