@@ -24,6 +24,11 @@ Example Configuration, add to settings.yaml
         value: "lorem ipsum #{host.host_attribute_name}"
     :delete
       :StatusID: integer_id
+    :search:
+      AppID: 741
+      StatusName: In Use
+      RequestingCustomerID: 00000000-0000-0000-0000-000000000000
+      OwningDepartmentID: 15798
   :title: 'custom title for TeamDynamix Tab'
   :fields:
     Asset ID: ID
@@ -50,16 +55,13 @@ Example Configuration, add to settings.yaml
 rake db:migrate
 
 ## Rake Task
-Scans existing hosts and creates or updates the asset in TeamDynamix.
-* If found, update the fields in the TeamDynamix asset.
-* If not found, create a TeamDynamix asset with desired fields.
-* If host does not have a teamdynamix_asset_id or it is deleted via backend, it creates a new asset.
+Gets existing assets in TeamDynamix based on search params [:teamdynamix][:api][:search]. Then scans the hosts and sync them with TeamDynamix.
+* If host has teamdynamix_asset_id, update the corresponding TeamDynamix asset.
+* If host name matches the asset Name or SerialNumber, update the host and the corresponding TeamDynamix asset.
+* If host has no matching asset, create an asset in TeamDynamix with configured fields.
 
-It could be run for all the hosts as:
+It could be run as:
 * rake hosts:sync_with_teamdynamix
-
-Or for specific hosts as (No space b/w hostnames):
-* rake hosts:sync_with_teamdynamix[hostname_1,hostname_2,..,hostname_X]
 
 ## Development
 gem install foreman_teamdynamix --dev

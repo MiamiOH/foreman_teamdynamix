@@ -28,8 +28,8 @@ namespace :hosts do
     # sending empty search param to get all the assets in TD at once
     # Note: due to a limitation(possibly a bug) in TD search asset api
     #       each and every search payload returns all the assets.
-    @teamdynamix_assets = @td_api.search_asset({})
-
+    search_params = SETTINGS[:teamdynamix][:api][:search] || {}
+    @teamdynamix_assets = @td_api.search_asset(search_params)
     @teamdynamix_assets.each do |asset|
       asset_id = asset['ID']
       # WHEN Asset is already mapped to a host
@@ -40,7 +40,7 @@ namespace :hosts do
         @td_api.update_asset(host)
         next
       end
-      hosts = Host.where('name IN (?)', [asset['Name'], asset['SerialNumber']])
+      hosts = Host.where(name: [asset['Name'], asset['SerialNumber']])
       # WHEN Asset does not have a matching host, THEN Do nothing
       next if hosts.blank?
       # WHEN Asset has more than one  matching host, THEN report error
@@ -65,10 +65,11 @@ namespace :hosts do
 
   # sync hosts that do not have assets created in Teamdynamix
   def create_assets_for_unmapped_hosts
-    @hosts = Host.all
-    unmapped_hosts = @hosts.reject { |host| @hosts_synced.include?(host.id) }
-    unmapped_hosts.each do |host|
-      @td_api.create_aset(host)
+    @unmapped_hosts = Host.where.not(id: @hosts_synced)
+    @unmapped_hosts.each do |host|
+      asset = @td_api.create_asset(host)
+      host.teamdynamix_asset_id = asset['ID']
+      host.save
     end
   rescue StandardError => e
     @errors << "component: creating_new_assets, host: #{host.id}, hostname: #{host.name}, Error: #{e.message}"
@@ -77,9 +78,10 @@ namespace :hosts do
   def print_summary
     puts "\n Summary:"
     puts "\t Total Assets in TD: #{@teamdynamix_assets.count}"
-    puts "\t Total Hosts: #{@hosts.count} \n\t Hosts Synced: #{@hosts_synced.uniq.count}"
+    puts "\t Hosts with matching asset: #{@hosts_synced.uniq.count}"
+    puts "\t Hosts with no assets: #{@unmapped_hosts}" if @unmapped_hosts.present?
     return if @errors.blank?
-    puts "\n\n Errors: #{@errors.count}"
+    puts "\n Errors: #{@errors.count}"
     @errors.each do |error|
       puts "\t#{error}"
     end
