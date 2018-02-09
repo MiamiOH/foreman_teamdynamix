@@ -4,7 +4,7 @@ class TeamdynamixApiTest < ActiveSupport::TestCase
   # rubocop:enable Metrics/ClassLength
   let(:subject) { TeamdynamixApi.instance }
   let(:api_config) { SETTINGS[:teamdynamix][:api] }
-  let(:app_id) { api_config[:id].to_s }
+  let(:app_id) { api_config[:appId].to_s }
   let(:api_url) { api_config[:url] }
   let(:host) { FactoryBot.build(:host, :managed) }
   let(:auth_payload) { { username: api_config[:username], password: api_config[:password] }.to_json }

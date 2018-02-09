@@ -9,7 +9,7 @@ Example Configuration, add to settings.yaml
 :teamdynamix:
   :api:
     :url: 'td_api_url'
-    :id: 'id'
+    :appId: 'id'
     :username: 'username'
     :password: 'password'
     :create:
