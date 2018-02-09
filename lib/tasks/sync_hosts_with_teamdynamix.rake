@@ -16,11 +16,18 @@ namespace :hosts do
     @errors = []
     @hosts_synced = []
 
+    set_current_user
+
     sync_existing_assets_to_hosts
 
     create_assets_for_unmapped_hosts
 
     print_summary
+  end
+
+  def set_current_user
+    console_user = User.find_by(login: 'foreman_console_admin')
+    User.current = console_user
   end
 
   # rubocop:disable Metrics/AbcSize, Metrics/MethodLength
