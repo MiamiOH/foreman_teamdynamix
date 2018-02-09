@@ -8,32 +8,37 @@ Example Configuration, add to settings.yaml
 ```
 :teamdynamix:
   :api:
-    :url: 'td_api_url'
-    :appId: 'id'
-    :username: 'username'
-    :password: 'password'
+    :url: 'https://miamioh.teamdynamix.com/SBTDWebApi/api'
+    :appId: 741
+    :username: 'xxxxxx'
+    :password: 'xxxxxx'
     :create:
-      :StatusID: integer_id
-      :attribute_name: string
+      :StatusID: 641
+      :OwningCustomerName: foreman_teamdynamix_plugin_test
       :Attributes:
-      - name: custom attribute name
-        id: integer_id
-        value: integer or string value
-      - name: custom attribute with dynamic value
-        id: integer_id
-        value: "lorem ipsum #{host.host_attribute_name}"
-    :delete
-      :StatusID: integer_id
+      - name: mu.ci.Lifecycle Status
+        id: 11634
+        value: 26190
+      - name: mu.ci.Description
+        id: 11632
+        value: "created by ForemanTeamdynamix plugin, owner is #{host.owner_id}"
+      - name: Ticket Routing Details
+        id: 11636
+        value: "Asset for host running on OS #{host.operatingsystem_id}"
+    :delete:
+      :StatusId: 642
     :search:
       AppID: 741
       StatusName: In Use
       RequestingCustomerID: 00000000-0000-0000-0000-000000000000
       OwningDepartmentID: 15798
-  :title: 'custom title for TeamDynamix Tab'
   :fields:
     Asset ID: ID
-    attribute label: Attribute_Name_as_in_asset
-    custom attribute name: Attributes.custom attribute name
+    Owner: OwningCustomerName
+    Parent Asset: ParentID
+    mu.ci.Description: Attributes.mu.ci.Description
+    Ticket Routing Details: Attributes.Ticket Routing Details
+    mu.ci.Lifecycle Status: Attributes.mu.ci.Lifecycle Status
 ```
 [:api][:create] or [:delete]
 * All attributes are passed to the TeamDynamix API as is, while creating or deleting a TeamDynamix Asset.
@@ -52,16 +57,21 @@ Example Configuration, add to settings.yaml
 * If an attribute or nested attribute does not exist or is not found, it would simply not be displayed.
 
 ## Add additional host attribute
+```
 rake db:migrate
+```
 
 ## Rake Task
+```
+rake hosts:sync_with_teamdynamix
+```
 Gets existing assets in TeamDynamix based on search params [:teamdynamix][:api][:search]. Then scans the hosts and sync them with TeamDynamix.
 * If host has teamdynamix_asset_id, update the corresponding TeamDynamix asset.
 * If host name matches the asset Name or SerialNumber, update the host and the corresponding TeamDynamix asset.
 * If host has no matching asset, create an asset in TeamDynamix with configured fields.
 
-It could be run as:
-* rake hosts:sync_with_teamdynamix
 
 ## Development
+```
 gem install foreman_teamdynamix --dev
+```
