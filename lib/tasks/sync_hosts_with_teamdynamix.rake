@@ -76,7 +76,7 @@ namespace :hosts do
     @unmapped_hosts.each do |host|
       asset = @td_api.create_asset(host)
       host.teamdynamix_asset_id = asset['ID']
-      host.save
+      @errors << "failed to update host ##{host.id} for asset ID ##{asset_id}" unless host.save
     end
   rescue StandardError => e
     @errors << "component: creating_new_assets, host: #{host.id}, hostname: #{host.name}, Error: #{e.message}"
