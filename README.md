@@ -1,9 +1,23 @@
 # foreman_teamdynamix
 A Foreman Plugin for TeamDynamix. It manages a host's life cycle as a corresponding Asset in TeamDynamix.
 
-## Configuration
+## Installation
 
-Example Configuration, add to settings.yaml
+To install foreman_teamdynamix require it in your gem file by adding the line.
+```
+gem 'foreman_teamdynamix'
+```
+Then update foreman to include the gem with the command.
+```
+bundle update foreman_teamdynamix
+```
+
+## Configuration
+To setup the configuration file create a new file named 'foreman_teamdynamix.yaml' at the location /etc/foreman/plugins/
+
+If there is no configuration file then the tab should not appear on the detailed hosts screen, but if there is one and it is empty then it will appear without any fields. 
+
+Example Configuration
 
 ```
 :teamdynamix:
@@ -51,8 +65,8 @@ Example Configuration, add to settings.yaml
 * String interpolation is supported for custom attribute's value.
 
 [:fields]
+* The keys are the display title and the values are the methods that are actually called to produce the value.
 * A link to the asset in Teamdynamix is displayed by default, as first field labelled as URI.
-* Make sure the Asset Attribute Name is spelled right. Label is to label it in the TeamDynamix Tab.
 * Nested attributes i.e custom attributes can be configured as mentioned in example configuration.
 * If an attribute or nested attribute does not exist or is not found, it would simply not be displayed.
 
@@ -60,6 +74,13 @@ Example Configuration, add to settings.yaml
 ```
 rake db:migrate
 ```
+
+## Verify the TeamDynamix Tab is loaded
+Navigate to /hosts/, click on one of the listed host. There should be tabs: 'Properties', 'Metrics', 'Templates', 'NICs' and 'teamdynamix.title or Team Dynamix Tab'
+
+## Development mode
+foreman running locally (i.e not installed via rpm/debian package) does not use settings from /etc/foreman/plugins/
+Add the teamdynamix config to <foreman_repo>/config/settings.yaml
 
 ## Rake Task
 ```
@@ -70,8 +91,27 @@ Gets existing assets in TeamDynamix based on search params [:teamdynamix][:api][
 * If host name matches the asset Name or SerialNumber, update the host and the corresponding TeamDynamix asset.
 * If host has no matching asset, create an asset in TeamDynamix with configured fields.
 
-
-## Development
+## Test mode
 ```
 gem install foreman_teamdynamix --dev
+rake test:foreman_teamdynamix
 ```
+
+## Notes
+
+This project is still incomplete and in development. 
+
+Copyright (c) 2017 Joe Lyons Stannard III
+
+This program is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with this program.  If not, see <http://www.gnu.org/licenses/>.
