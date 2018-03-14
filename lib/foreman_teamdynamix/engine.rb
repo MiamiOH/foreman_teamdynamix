@@ -20,9 +20,12 @@ module ForemanTeamdynamix
 
         # Add permissions
         security_block :foreman_teamdynamix do
-          permission :view_hosts,
-                     { :hosts => [:teamdynamix] },
-                     :resource_type => 'Host'
+          ps = permission :view_hosts,
+                          { :hosts => [:teamdynamix] },
+                          :resource_type => 'Host'
+          pn = ps.pop
+          po = ps.detect { |p| p.name == :view_hosts }
+          po.actions << pn.actions.first
         end
       end
     end
@@ -39,7 +42,7 @@ module ForemanTeamdynamix
     end
 
     initializer 'foreman_teamdynamix.register_gettext', after: :load_config_initializers do |_app|
-      locale_dir = File.join(File.expand_path('../../..', __FILE__), 'locale')
+      locale_dir = File.join(File.expand_path('../..', __dir__), 'locale')
       locale_domain = 'foreman_teamdynamix'
       Foreman::Gettext::Support.add_text_domain locale_domain, locale_dir
     end

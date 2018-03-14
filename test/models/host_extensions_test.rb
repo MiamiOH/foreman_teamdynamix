@@ -34,5 +34,4 @@ class HostExtensionsTests < ActiveSupport::TestCase
       assert_send([td_api, :retire_asset, host.teamdynamix_asset_id])
     end
   end
-
 end

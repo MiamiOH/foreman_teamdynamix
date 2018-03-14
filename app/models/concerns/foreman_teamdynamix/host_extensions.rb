@@ -19,14 +19,14 @@ module ForemanTeamdynamix
       self.teamdynamix_asset_id = asset['ID']
     rescue StandardError => e
       errors.add(:base, _("Could not create the asset for the host in TeamDynamix: #{e.message}"))
-      return false
+      false
     end
 
     def retire_teamdynamix_asset
-      td_api.retire_asset(self.teamdynamix_asset_id) if self.teamdynamix_asset_id
+      td_api.retire_asset(teamdynamix_asset_id) if teamdynamix_asset_id
     rescue StandardError => e
       errors.add(:base, _("Could not retire the asset for the host in TeamDynamix: #{e.message}"))
-      return false
+      false
     end
   end
 end
