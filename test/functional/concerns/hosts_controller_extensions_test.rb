@@ -7,7 +7,7 @@ class HostsControllerTest < ActionController::TestCase
   before do
     Host::Managed.any_instance.stubs(:td_api).returns(td_api)
   end
-  # rubocop:disable Metrics/LineLength, Style/StringLiterals, HttpPositionalArguments
+  # rubocop:disable Style/StringLiterals, HttpPositionalArguments
   describe 'Given host exist as an asset in TeamDynamix' do
     describe 'when TeamDynamix asset attributes are configured' do
       describe 'GET hosts/show' do
@@ -20,12 +20,12 @@ class HostsControllerTest < ActionController::TestCase
           assert_includes response.body, "<div id=\"teamdynamix\" class=\"tab-pane\" data-ajax-url=\"/hosts/#{host.name}/teamdynamix\" data-on-complete=\"onContentLoad\">"
         end
         test 'TeamDynamix tab contains configured asset attributes' do
-          skip()
+          skip
           get hosts_teamdynamix_path, { :id => host.name }, set_session_user
           assert_template 'foreman_teamdynamix'
         end
       end
     end
   end
-  # rubocop:enable Metrics/LineLength, Style/StringLiterals, HttpPositionalArguments
+  # rubocop:enable Style/StringLiterals, HttpPositionalArguments
 end

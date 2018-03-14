@@ -1,4 +1,4 @@
-require File.expand_path('../lib/foreman_teamdynamix/version', __FILE__)
+require File.expand_path('lib/foreman_teamdynamix/version', __dir__)
 require 'date'
 
 Gem::Specification.new do |s|
@@ -11,14 +11,12 @@ Gem::Specification.new do |s|
   s.homepage    = 'https://github.com/MiamiOH/foreman_teamdynamix'
   s.summary     = 'Creates TeamDynamix Asset when a host is created in Foreman'
   # also update locale/gemspec.rb
-  # rubocop:disable Metrics/LineLength
   s.description = 'A Foreman Plugin to create a configurable TeamDynamix Asset when a host is created in Foreman'
-  # rubocop:enable Metrics/LineLength
 
   s.files = Dir['{app,config,db,lib,locale}/**/*'] + ['LICENSE', 'Rakefile', 'README.md']
   s.test_files = Dir['test/**/*']
 
   s.add_dependency 'deface', '< 2.0'
-  s.add_development_dependency 'webmock'
   s.add_development_dependency 'rubocop'
+  s.add_development_dependency 'webmock'
 end

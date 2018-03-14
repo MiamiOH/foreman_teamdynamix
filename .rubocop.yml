@@ -12,8 +12,18 @@ Rails/ActionFilter:
 Metrics/MethodLength:
   Max: 20
 
+Metrics/AbcSize:
+  # Ruduce this... Max: 15
+  Max: 22
+
+Metrics/ClassLength:
+  Max: 120
+
+Metrics/CyclomaticComplexity:
+  Max: 7
+
 Metrics/LineLength:
-  Max: 111 # TODO: discuss and set this
+  Max: 121 # TODO: discuss and set this
   Exclude:
     - 'test/**/*.rb'
 
