@@ -6,7 +6,7 @@ module ForemanTeamdynamix
                                'Parent Asset' => 'ParentID' }.freeze
 
     def teamdynamix_title
-      SETTINGS[:teamdynamix][:title] || 'Team Dynamix'
+      SETTINGS[:teamdynamix][:title] || 'TeamDynamix'
     end
 
     def teamdynamix_fields

@@ -1,0 +1,11 @@
+---
+language: ruby
+cache: bundler
+script: bundle exec rubocop
+sudo: false
+matrix:
+  fast_finish: true
+  include:
+  - rvm: 2.2.2
+notifications:
+  email: false

@@ -15,11 +15,12 @@ bundle update foreman_teamdynamix
 ## Configuration
 To setup the configuration file create a new file named 'foreman_teamdynamix.yaml' at the location /etc/foreman/plugins/
 
-If there is no configuration file then the tab should not appear on the detailed hosts screen, but if there is one and it is empty then it will appear without any fields. 
+If there is no configuration file then the tab should not appear on the detailed hosts screen, but if there is one and it is empty then it will appear without any fields.
 
 Example Configuration
 
 ```
+---
 :teamdynamix:
   :api:
     :url: 'https://miamioh.teamdynamix.com/SBTDWebApi/api'
