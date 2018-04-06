@@ -15,7 +15,7 @@ bundle update foreman_teamdynamix
 ## Configuration
 To setup the configuration file create a new file named 'foreman_teamdynamix.yaml' at the location /etc/foreman/plugins/
 
-If there is no configuration file then the tab should not appear on the detailed hosts screen, but if there is one and it is empty then it will appear without any fields. 
+If there is no configuration file then the tab should not appear on the detailed hosts screen, but if there is one and it is empty then it will appear without any fields.
 
 Example Configuration
 
@@ -41,11 +41,6 @@ Example Configuration
         value: "Asset for host running on OS #{host.operatingsystem_id}"
     :delete:
       :StatusId: 642
-    :search:
-      AppID: 741
-      StatusName: In Use
-      RequestingCustomerID: 00000000-0000-0000-0000-000000000000
-      OwningDepartmentID: 15798
   :fields:
     Asset ID: ID
     Owner: OwningCustomerName
@@ -84,11 +79,11 @@ Add the teamdynamix config to <foreman_repo>/config/settings.yaml
 
 ## Rake Task
 ```
-rake hosts:sync_with_teamdynamix
+rake teamydynamix:sync:hosts
 ```
-Gets existing assets in TeamDynamix based on search params [:teamdynamix][:api][:search]. Then scans the hosts and sync them with TeamDynamix.
+Scans the hosts and sync them with TeamDynamix.
 * If host has teamdynamix_asset_id, update the corresponding TeamDynamix asset.
-* If host name matches the asset Name or SerialNumber, update the host and the corresponding TeamDynamix asset.
+* If host name matches the asset SerialNumber, update the host and the corresponding TeamDynamix asset.
 * If host has no matching asset, create an asset in TeamDynamix with configured fields.
 
 ## Test mode
