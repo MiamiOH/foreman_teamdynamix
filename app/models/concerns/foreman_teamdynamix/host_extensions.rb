@@ -16,18 +16,17 @@ module ForemanTeamdynamix
 
     def create_teamdynamix_asset
       # when the asset is already in teamdynamix
-      assets = td_api.search_asset({ SerialLike: self.name})
+      assets = td_api.search_asset(SerialLike: name)
 
       if assets.empty?
         asset = td_api.create_asset(self)
         self.teamdynamix_asset_id = asset['ID']
       elsif assets.length > 1
-        raise "Found more than 1 existing asset"
+        raise 'Found more than 1 existing asset'
       else
         self.teamdynamix_asset_id = assets.first['ID']
         td_api.update_asset(self)
       end
-
     rescue StandardError => e
       errors.add(:base, _("Could not create the asset for the host in TeamDynamix: #{e.message}"))
       return false

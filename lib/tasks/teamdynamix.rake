@@ -10,9 +10,7 @@ DESC
 namespace :teamdynamix do
   namespace :sync do
     task :hosts => :environment do
-
       td_api = TeamdynamixApi.instance
-      hosts_synced = []
       errors = []
       creates = 0
       updates_from_serial_matching = 0
@@ -27,7 +25,7 @@ namespace :teamdynamix do
           td_api.update_asset(h)
           update_from_asset_id += 1
         else
-          assets = td_api.search_asset({ SerialLike: h.name})
+          assets = td_api.search_asset(SerialLike: h.name)
           if assets.empty?
             asset = td_api.create_asset(h)
             h.teamdynamix_asset_id = asset['ID']
@@ -44,7 +42,9 @@ namespace :teamdynamix do
         end
       end
       puts "Assets created: #{creates}" unless creates.eql?(0)
-      puts "Assets updated from serial search: #{updates_from_serial_matching}" unless updates_from_serial_matching.eql?(0)
+      unless updates_from_serial_matching.eql?(0)
+        puts "Assets updated from serial search: #{updates_from_serial_matching}"
+      end
       puts "Assets updated from ID: #{update_from_asset_id}" unless update_from_asset_id.eql?(0)
       puts "Errors:\n#{errors.join("\n")}" unless errors.empty?
     end

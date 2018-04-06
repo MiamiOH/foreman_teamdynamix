@@ -25,11 +25,9 @@ class TeamdynamixApi
   end
 
   def asset_exist?(asset_id)
-    begin
-      get_asset(asset_id).present?
-    rescue RuntimeError => e
-      return false
-    end
+    get_asset(asset_id).present?
+  rescue RuntimeError
+    return false
   end
 
   def create_asset(host)
