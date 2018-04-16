@@ -9,7 +9,7 @@ module ForemanTeamdynamix
     included do
       before_create :create_teamdynamix_asset
       before_destroy :retire_teamdynamix_asset
-      validates :teamdynamix_asset_id, uniqueness: { :allow_blank => true }
+      validates :teamdynamix_asset_uid, uniqueness: { :allow_blank => true }
     end
 
     private
@@ -20,11 +20,11 @@ module ForemanTeamdynamix
 
       if assets.empty?
         asset = td_api.create_asset(self)
-        self.teamdynamix_asset_id = asset['ID']
+        self.teamdynamix_asset_uid = asset['ID']
       elsif assets.length > 1
         raise 'Found more than 1 existing asset'
       else
-        self.teamdynamix_asset_id = assets.first['ID']
+        self.teamdynamix_asset_uid = assets.first['ID']
         td_api.update_asset(self)
       end
     rescue StandardError => e
@@ -33,7 +33,7 @@ module ForemanTeamdynamix
     end
 
     def retire_teamdynamix_asset
-      td_api.retire_asset(teamdynamix_asset_id) if teamdynamix_asset_id
+      td_api.retire_asset(teamdynamix_asset_uid) if teamdynamix_asset_uid
     rescue StandardError => e
       errors.add(:base, _("Could not retire the asset for the host in TeamDynamix: #{e.message}"))
       false

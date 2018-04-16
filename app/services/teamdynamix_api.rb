@@ -36,7 +36,7 @@ class TeamdynamixApi
   end
 
   def update_asset(host)
-    uri = URI.parse(API_URL + "/#{APP_ID}/assets/#{host.teamdynamix_asset_id}")
+    uri = URI.parse(API_URL + "/#{APP_ID}/assets/#{host.teamdynamix_asset_uid}")
     rest(:post, uri, update_asset_payload(host))
   end
 
@@ -138,7 +138,7 @@ class TeamdynamixApi
   end
 
   def update_asset_payload(host)
-    payload = { ID: host.teamdynamix_asset_id }
+    payload = { ID: host.teamdynamix_asset_uid }
     payload.merge(create_asset_payload(host))
   end
 

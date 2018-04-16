@@ -21,20 +21,20 @@ namespace :teamdynamix do
 
       Host.all.each do |h|
         # if asset exists, update it
-        if td_api.asset_exist?(h.teamdynamix_asset_id)
+        if td_api.asset_exist?(h.teamdynamix_asset_uid)
           td_api.update_asset(h)
           update_from_asset_id += 1
         else
           assets = td_api.search_asset(SerialLike: h.name)
           if assets.empty?
             asset = td_api.create_asset(h)
-            h.teamdynamix_asset_id = asset['ID']
+            h.teamdynamix_asset_uid = asset['ID']
             errors.push("Could not save host: #{h.name} (#{h.id})") unless h.save
             creates += 1
           elsif assets.length > 1
             errors.push("Could not sync: Found more than 1 asset for #{h.name} (#{h.id})")
           else
-            h.teamdynamix_asset_id = assets.first['ID']
+            h.teamdynamix_asset_uid = assets.first['ID']
             td_api.update_asset(h)
             errors.push("Could not save host: #{h.name} (#{h.id})") unless h.save
             updates_from_serial_matching += 1

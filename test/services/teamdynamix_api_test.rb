@@ -36,9 +36,9 @@ class TeamdynamixApiTest < ActiveSupport::TestCase
 
   describe '#update_asset' do
     let(:update_path) { get_asset_path }
-    let(:update_payload) { { ID: host.teamdynamix_asset_id }.merge!(create_payload) }
+    let(:update_payload) { { ID: host.teamdynamix_asset_uid }.merge!(create_payload) }
     before do
-      host.teamdynamix_asset_id = sample_asset_id
+      host.teamdynamix_asset_uid = sample_asset_id
       SETTINGS[:teamdynamix][:api][:create] = { StatusID: create_status_id,
                                                 Attributes: custom_attributes }
     end

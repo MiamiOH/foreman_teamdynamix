@@ -16,8 +16,8 @@ class HostExtensionsTests < ActiveSupport::TestCase
       assert_send([td_api, :create_asset, host])
     end
 
-    it 'sets host#teamdynamix_asset_id' do
-      assert_not_nil(host.teamdynamix_asset_id)
+    it 'sets host#teamdynamix_asset_uid' do
+      assert_not_nil(host.teamdynamix_asset_uid)
     end
   end
 
@@ -31,7 +31,7 @@ class HostExtensionsTests < ActiveSupport::TestCase
     end
 
     it 'calls Teamdynamix API to retire an asset' do
-      assert_send([td_api, :retire_asset, host.teamdynamix_asset_id])
+      assert_send([td_api, :retire_asset, host.teamdynamix_asset_uid])
     end
   end
 end

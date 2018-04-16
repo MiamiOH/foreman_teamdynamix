@@ -83,7 +83,7 @@ Add the teamdynamix config to <foreman_repo>/config/settings.yaml
 rake teamdynamix:sync:hosts
 ```
 Scans the hosts and sync them with TeamDynamix.
-* If host has teamdynamix_asset_id, update the corresponding TeamDynamix asset.
+* If host has teamdynamix_asset_uid, update the corresponding TeamDynamix asset.
 * If host name matches the asset SerialNumber, update the host and the corresponding TeamDynamix asset.
 * If host has no matching asset, create an asset in TeamDynamix with configured fields.
 

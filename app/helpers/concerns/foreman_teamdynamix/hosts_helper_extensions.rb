@@ -11,9 +11,9 @@ module ForemanTeamdynamix
 
     def teamdynamix_fields
       td_pane_fields = SETTINGS[:teamdynamix][:fields] || DEFAULT_TD_PANE_FIELDS
-      return [[_('Asset'), 'None Associated']] unless @host.teamdynamix_asset_id
+      return [[_('Asset'), 'None Associated']] unless @host.teamdynamix_asset_uid
 
-      get_teamdynamix_asset(@host.teamdynamix_asset_id)
+      get_teamdynamix_asset(@host.teamdynamix_asset_uid)
 
       # always display a link to the asset
       fields = [asset_uri]
