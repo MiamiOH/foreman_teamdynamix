@@ -26,6 +26,8 @@ class TeamdynamixApi
 
   def asset_exist?(asset_id)
     get_asset(asset_id).present?
+  rescue RuntimeError
+    false
   end
 
   def create_asset(host)
