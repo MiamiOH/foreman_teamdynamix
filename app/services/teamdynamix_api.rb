@@ -117,11 +117,11 @@ class TeamdynamixApi
                       SerialNumber: host.name,
                       Name: host.fqdn }
     create_attrs = API_CONFIG[:create].symbolize_keys
-    evaluate_attributes(create_attrs)
+    evaluate_attributes(create_attrs, host)
     default_attrs.merge(create_attrs)
   end
 
-  def evaluate_attributes(create_attrs)
+  def evaluate_attributes(create_attrs, host)
     return if create_attrs[:Attributes].blank?
     create_attrs[:Attributes].each do |attribute|
       attribute.transform_keys!(&:downcase)
