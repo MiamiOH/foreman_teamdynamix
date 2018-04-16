@@ -29,14 +29,14 @@ namespace :teamdynamix do
           if assets.empty?
             asset = td_api.create_asset(h)
             h.teamdynamix_asset_id = asset['ID']
-            h.save
+            errors.push("Could not save host: #{h.name} (#{h.id})") unless h.save
             creates += 1
           elsif assets.length > 1
             errors.push("Could not sync: Found more than 1 asset for #{h.name} (#{h.id})")
           else
             h.teamdynamix_asset_id = assets.first['ID']
             td_api.update_asset(h)
-            h.save
+            errors.push("Could not save host: #{h.name} (#{h.id})") unless h.save
             updates_from_serial_matching += 1
           end
         end
