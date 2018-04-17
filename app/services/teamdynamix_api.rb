@@ -20,7 +20,7 @@ class TeamdynamixApi
 
   # returns TeamDynamix.Api.Assets.Asset
   def get_asset(asset_id)
-    uri = URI.parse(API_URL + "/#{APP_ID}/assets/#{asset_id}")
+    uri = URI.parse("#{API_URL}/#{APP_ID}/assets/#{asset_id}")
     rest(:get, uri)
   end
 
@@ -31,23 +31,23 @@ class TeamdynamixApi
   end
 
   def create_asset(host)
-    uri = URI.parse(API_URL + "/#{APP_ID}/assets")
+    uri = URI.parse("#{API_URL}/#{APP_ID}/assets")
     rest(:post, uri, create_asset_payload(host))
   end
 
   def update_asset(host)
-    uri = URI.parse(API_URL + "/#{APP_ID}/assets/#{host.teamdynamix_asset_uid}")
+    uri = URI.parse("#{API_URL}/#{APP_ID}/assets/#{host.teamdynamix_asset_uid}")
     rest(:post, uri, update_asset_payload(host))
   end
 
   def retire_asset(asset_id)
-    uri = URI.parse(API_URL + "/#{APP_ID}/assets/#{asset_id}")
+    uri = URI.parse("#{API_URL}/#{APP_ID}/assets/#{asset_id}")
     rest(:post, uri, retire_asset_payload(asset_id))
   end
 
   # Gets a list of assets matching the specified criteria. (IEnumerable(Of TeamDynamix.Api.Assets.Asset))
   def search_asset(search_params)
-    uri = URI.parse(API_URL + "/#{APP_ID}/assets/search")
+    uri = URI.parse("#{API_URL}/#{APP_ID}/assets/search")
     rest(:post, uri, search_params)
   end
 
@@ -65,7 +65,7 @@ class TeamdynamixApi
       req = Net::HTTP::Get.new(uri)
     end
     # set headers
-    req.add_field('Authorization', 'Bearer ' + @auth_token)
+    req.add_field('Authorization', "Bearer #{@auth_token}")
     # send request
     res = http.start do |http_handler|
       http_handler.request(req)
@@ -75,7 +75,7 @@ class TeamdynamixApi
   end
 
   def request_token
-    uri = URI.parse(API_URL + '/auth')
+    uri = URI.parse("#{API_URL}/auth")
     http = Net::HTTP.new(uri.host, uri.port)
     http.use_ssl = true
     # set verb

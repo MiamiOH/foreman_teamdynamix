@@ -15,8 +15,8 @@ module ForemanTeamdynamix
 
       get_teamdynamix_asset(@host.teamdynamix_asset_uid)
 
-      # always display a link to the asset
-      fields = [asset_uri]
+      # display a link to the asset if url set
+      fields = asset_uri(td_pane_fields)
 
       td_pane_fields.each do |field_name, asset_attr|
         asset_attr_val = @asset.key?(asset_attr) ? @asset[asset_attr] : get_nested_attrib_val(asset_attr)
@@ -29,10 +29,13 @@ module ForemanTeamdynamix
 
     private
 
-    def asset_uri
-      api_url = SETTINGS[:teamdynamix][:api][:url]
-      uri = api_url.split('api').first + @asset['Uri']
-      [_('URI'), link_to(@asset['Uri'], uri, target: '_blank')]
+    def asset_uri(td_pane_fields)
+      if (fields_url = td_pane_fields.delete(:url))
+        uri = "#{fields_url}/#{@asset['AppID']}/Assets/AssetDet?AssetID=#{@asset['ID']}"
+        [[_('URI'), link_to(@asset['SerialNumber'], uri, target: '_blank')]]
+      else
+        []
+      end
     end
 
     def get_teamdynamix_asset(asset_id)
