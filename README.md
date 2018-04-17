@@ -63,7 +63,7 @@ Example Configuration
 
 [:fields]
 * The keys are the display title and the values are the methods that are actually called to produce the value.
-* A link to the asset in Teamdynamix is displayed by default, as first field labelled as URI.
+* A link to the asset in Teamdynamix is displayed, if url is specified, as first field labeled as URI.
 * Nested attributes i.e custom attributes can be configured as mentioned in example configuration.
 * If an attribute or nested attribute does not exist or is not found, it would simply not be displayed.
 
