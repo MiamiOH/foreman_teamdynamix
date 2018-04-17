@@ -23,7 +23,7 @@ Example Configuration
 ---
 :teamdynamix:
   :api:
-    :url: 'https://miamioh.teamdynamix.com/SBTDWebApi/api'
+    :url: https://miamioh.teamdynamix.com/SBTDWebApi/api
     :appId: 741
     :username: 'xxxxxx'
     :password: 'xxxxxx'
@@ -43,6 +43,7 @@ Example Configuration
     :delete:
       :StatusId: 642
   :fields:
+    :url: https://miamioh.teamdynamix.com/SBTDNext/Apps
     Asset ID: ID
     Owner: OwningCustomerName
     Parent Asset: ParentID
