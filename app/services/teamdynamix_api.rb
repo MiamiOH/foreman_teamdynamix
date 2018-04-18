@@ -122,11 +122,24 @@ class TeamdynamixApi
   end
 
   def evaluate_attributes(create_attrs, host)
-    return if create_attrs[:Attributes].blank?
-    create_attrs[:Attributes].each do |attribute|
-      attribute.transform_keys!(&:downcase)
-      attribute['value'] = eval("\"#{attribute['value']}\"", binding, __FILE__, __LINE__) # rubocop:disable Security/Eval
+    create_attrs.each do |k, v|
+      if k.eql?(:Attributes)
+        v.each do |attribute|
+          attribute.transform_keys!(&:downcase)
+          attribute['value'] = eval_attribute(attribute['value'], host)
+          v.delete(attribute) if attribute['value'].nil?
+        end
+      else
+        create_attrs[k] = eval_attribute(v, host)
+        create_attrs.delete(k) if create_attrs[k].nil?
+      end
     end
+  end
+
+  def eval_attribute(value, host)
+    eval(value.to_s, binding, __FILE__, __LINE__) # rubocop:disable Security/Eval
+  rescue StandardError
+    nil
   end
 
   def must_configure_create_params
