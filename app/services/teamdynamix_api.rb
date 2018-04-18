@@ -116,22 +116,19 @@ class TeamdynamixApi
     default_attrs = { AppID: APP_ID,
                       SerialNumber: host.name,
                       Name: host.fqdn }
-    create_attrs = API_CONFIG[:create].symbolize_keys
-    evaluate_attributes(create_attrs, host)
+    create_attrs = evaluate_attributes(API_CONFIG[:create], host)
     default_attrs.merge(create_attrs)
   end
 
   def evaluate_attributes(create_attrs, host)
-    create_attrs.each do |k, v|
+    create_attrs.symbolize_keys.each_with_object({}) do |(k, v), h|
       if k.eql?(:Attributes)
-        v.each do |attribute|
-          attribute.transform_keys!(&:downcase)
-          attribute['value'] = eval_attribute(attribute['value'], host)
-          v.delete(attribute) if attribute['value'].nil?
+        h[:Attributes] = v.each_with_object([]) do |attribute, a|
+          a << attribute.transform_keys(&:downcase)
+          a.last['value'] = eval_attribute(a.last['value'], host)
         end
       else
-        create_attrs[k] = eval_attribute(v, host)
-        create_attrs.delete(k) if create_attrs[k].nil?
+        h[k] = eval_attribute(v, host)
       end
     end
   end
