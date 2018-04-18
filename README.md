@@ -29,17 +29,20 @@ Example Configuration
     :password: 'xxxxxx'
     :create:
       :StatusID: 641
-      :OwningCustomerName: foreman_teamdynamix_plugin_test
+      :AcquisitionDate: host.created_at
+      :OwningCustomerName: "'foreman_teamdynamix_plugin_test'"
       :Attributes:
       - name: mu.ci.Lifecycle Status
         id: 11634
         value: 26190
       - name: mu.ci.Description
         id: 11632
-        value: "created by ForemanTeamdynamix plugin, owner is #{host.owner_id}"
+        value: >-
+          "created by ForemanTeamdynamix plugin, owner is #{host.owner_id}"
       - name: Ticket Routing Details
         id: 11636
-        value: "Asset for host running on OS #{host.operatingsystem_id}"
+        value: >-
+          "Asset for host running on OS #{host.operatingsystem_id}"
     :delete:
       :StatusId: 642
   :fields:
@@ -59,7 +62,7 @@ Example Configuration
 * To configure any [Custom Attributes](https://api.teamdynamix.com/TDWebApi/Home/type/TeamDynamix.Api.CustomAttributes.CustomAttribute) for the asset.
 * It must contain expected value for 'id' and 'value' fields.
 * rest of the fields are optional, check the Custom Attribute's definition for what other fields are updatable.
-* String interpolation is supported for custom attribute's value.
+* Code evaluation is supported for custom attribute's value.
 
 [:fields]
 * The keys are the display title and the values are the methods that are actually called to produce the value.
