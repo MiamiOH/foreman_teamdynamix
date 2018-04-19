@@ -18,7 +18,7 @@ module ForemanTeamdynamix
       # display a link to the asset if url set
       fields = asset_uri(td_pane_fields)
 
-      td_pane_fields.each do |field_name, asset_attr|
+      td_pane_fields.except(:url).each do |field_name, asset_attr|
         asset_attr_val = @asset.key?(asset_attr) ? @asset[asset_attr] : get_nested_attrib_val(asset_attr)
         fields += [[_(field_name.to_s), asset_attr_val]] if asset_attr_val.present?
       end
@@ -30,8 +30,8 @@ module ForemanTeamdynamix
     private
 
     def asset_uri(td_pane_fields)
-      if (fields_url = td_pane_fields.delete(:url))
-        uri = "#{fields_url}/#{@asset['AppID']}/Assets/AssetDet?AssetID=#{@asset['ID']}"
+      if td_pane_fields[:url]
+        uri = "#{td_pane_fields[:url]}/#{@asset['AppID']}/Assets/AssetDet?AssetID=#{@asset['ID']}"
         [[_('URI'), link_to(@asset['SerialNumber'], uri, target: '_blank')]]
       else
         []
