@@ -2,17 +2,17 @@ module ForemanTeamdynamix
   module HostExtensions
     extend ActiveSupport::Concern
 
-    def td_api
-      @td_api ||= TeamdynamixApi.instance
-    end
-
     included do
-      before_create :create_teamdynamix_asset
+      include Orchestration::Teamdynamix
       before_destroy :retire_teamdynamix_asset
       validates :teamdynamix_asset_uid, uniqueness: { :allow_blank => true }
     end
 
     private
+
+    def td_api
+      @td_api ||= TeamdynamixApi.instance
+    end
 
     def create_teamdynamix_asset
       # when the asset is already in teamdynamix
