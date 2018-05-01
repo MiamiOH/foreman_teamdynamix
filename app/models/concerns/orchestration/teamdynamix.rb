@@ -13,11 +13,11 @@ module Orchestration
     protected
 
     def queue_teamdynamix_create
-      queue.create(:name   => _('this should say something %s') % self, :priority => 60,
-                   :action => [self, :setTeamdynamix])
+      queue.create(:name   => _('Creating asset in TeamDynamix %s') % self, :priority => 60,
+                   :action => [self, :set_teamdynamix])
     end
 
-    def setTeamdynamix
+    def set_teamdynamix
       assets = td_api.search_asset(SerialLike: name)
       if assets.empty?
         asset = td_api.create_asset(self)
@@ -33,6 +33,6 @@ module Orchestration
       false
     end
 
-    def delTeamdynamix; end
+    def del_teamdynamix; end
   end
 end
