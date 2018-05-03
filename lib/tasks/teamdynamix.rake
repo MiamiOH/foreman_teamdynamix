@@ -40,6 +40,7 @@ namespace :teamdynamix do
             updates_from_serial_matching += 1
           end
         end
+        sleep(1) # TD only allows 60 api calls per minute
       end
       puts "Assets created: #{creates}" unless creates.eql?(0)
       unless updates_from_serial_matching.eql?(0)
