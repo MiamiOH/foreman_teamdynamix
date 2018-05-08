@@ -1,23 +1,24 @@
-module ForemanTeamdynamix
-  module HostExtensions
+module Orchestration
+  module Teamdynamix
     extend ActiveSupport::Concern
+
+    included do
+      before_create :queue_teamdynamix_create
+    end
 
     def td_api
       @td_api ||= TeamdynamixApi.instance
     end
 
-    included do
-      before_create :create_teamdynamix_asset
-      before_destroy :retire_teamdynamix_asset
-      validates :teamdynamix_asset_uid, uniqueness: { :allow_blank => true }
+    protected
+
+    def queue_teamdynamix_create
+      queue.create(:name   => _('Creating asset in TeamDynamix %s') % self, :priority => 60,
+                   :action => [self, :set_teamdynamix])
     end
 
-    private
-
-    def create_teamdynamix_asset
-      # when the asset is already in teamdynamix
+    def set_teamdynamix
       assets = td_api.search_asset(SerialLike: name)
-
       if assets.empty?
         asset = td_api.create_asset(self)
         self.teamdynamix_asset_uid = asset['ID']
@@ -32,11 +33,6 @@ module ForemanTeamdynamix
       false
     end
 
-    def retire_teamdynamix_asset
-      td_api.retire_asset(teamdynamix_asset_uid) if teamdynamix_asset_uid
-    rescue StandardError => e
-      errors.add(:base, _("Could not retire the asset for the host in TeamDynamix: #{e.message}"))
-      false
-    end
+    def del_teamdynamix; end
   end
 end
