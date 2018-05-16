@@ -6,6 +6,10 @@ desc <<-DESC.strip_heredoc.squish
   It could be run for all the hosts as:
     * rake teamydynamix:sync:hosts
 
+  Available options:
+    * where => where string for limiting host query
+    * limit => limit for limiting host query
+
 DESC
 namespace :teamdynamix do
   namespace :sync do
@@ -19,7 +23,11 @@ namespace :teamdynamix do
       console_user = User.find_by(login: 'foreman_console_admin')
       User.current = console_user
 
-      Host.all.each do |h|
+      hosts = Host
+      hosts = hosts.where(ENV['where']) if ENV['where']
+      hosts = hosts.limit(ENV['limit']) if ENV['limit']
+
+      hosts.all.each do |h|
         # if asset exists, update it
         if td_api.asset_exist?(h.teamdynamix_asset_uid)
           td_api.update_asset(h)
