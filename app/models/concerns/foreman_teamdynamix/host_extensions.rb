@@ -2,38 +2,59 @@ module ForemanTeamdynamix
   module HostExtensions
     extend ActiveSupport::Concern
 
-    def td_api
-      @td_api ||= TeamdynamixApi.instance
-    end
-
     included do
-      before_create :create_teamdynamix_asset
+      before_create :create_or_update_teamdynamix_asset
       before_destroy :retire_teamdynamix_asset
       validates :teamdynamix_asset_uid, uniqueness: { :allow_blank => true }
     end
 
-    private
+    def td_api
+      @td_api ||= TeamdynamixApi.instance
+    end
 
-    def create_teamdynamix_asset
-      # when the asset is already in teamdynamix
-      assets = td_api.search_asset(SerialLike: name)
+    def teamdynamix_asset_status
+      @teamdynamix_asset_status
+    end
 
-      if assets.empty?
-        asset = td_api.create_asset(self)
-        self.teamdynamix_asset_uid = asset['ID']
-      elsif assets.length > 1
-        raise 'Found more than 1 existing asset'
-      else
-        self.teamdynamix_asset_uid = assets.first['ID']
+    def teamdynamix_asset(search = false)
+      @teamdynamix_asset ||= td_api.get_asset(teamdynamix_asset_uid)
+
+      if search && !@teamdynamix_asset
+        assets = td_api.search_asset(SerialLike: name)
+        if assets.length == 1
+          @teamdynamix_asset = assets.first
+          self.teamdynamix_asset_uid = teamdynamix_asset['ID']
+          @teamdynamix_asset_status = :updated_search
+        elsif assets.length > 1
+          errors.add(:base, _('Search for asset in TeamDynamix failed: Found more than 1 matching asset'))
+        end
+      end
+
+      @teamdynamix_asset
+    end
+
+    def create_or_update_teamdynamix_asset(save = false)
+      if teamdynamix_asset(true)
         td_api.update_asset(self)
+        @teamdynamix_asset_status ||= :updated_id
+        self.save if save
+      elsif errors.empty?
+        @teamdynamix_asset = td_api.create_asset(self)
+        self.teamdynamix_asset_uid = teamdynamix_asset['ID']
+        @teamdynamix_asset_status = :created
+        self.save if save
+      else
+        false
       end
     rescue StandardError => e
-      errors.add(:base, _("Could not create the asset for the host in TeamDynamix: #{e.message}"))
+      errors.add(:base, _("Could not create or update the asset for the host in TeamDynamix: #{e.message}"))
       false
     end
 
+    private
+
     def retire_teamdynamix_asset
-      td_api.retire_asset(teamdynamix_asset_uid) if teamdynamix_asset_uid
+      td_api.retire_asset(self) if teamdynamix_asset
     rescue StandardError => e
       errors.add(:base, _("Could not retire the asset for the host in TeamDynamix: #{e.message}"))
       false

@@ -28,23 +28,23 @@ Example Configuration
     :username: 'xxxxxx'
     :password: 'xxxxxx'
     :create:
-      :StatusID: 641
-      :AcquisitionDate: host.created_at
-      :OwningCustomerName: "'foreman_teamdynamix_plugin_test'"
-      :Attributes:
-      - name: mu.ci.Lifecycle Status
-        id: 11634
-        value: 26190
-      - name: mu.ci.Description
-        id: 11632
-        value: >-
+      StatusID: 641
+      AcquisitionDate: host.created_at
+      OwningCustomerName: "'foreman_teamdynamix_plugin_test'"
+      Attributes:
+      - Name: mu.ci.Lifecycle Status
+        ID: 11634
+        Value: 26190
+      - Name: mu.ci.Description
+        ID: 11632
+        Value: >-
           "created by ForemanTeamdynamix plugin, owner is #{host.owner_id}"
-      - name: Ticket Routing Details
-        id: 11636
-        value: >-
+      - Name: Ticket Routing Details
+        ID: 11636
+        Value: >-
           "Asset for host running on OS #{host.operatingsystem_id}"
     :delete:
-      :StatusId: 642
+      StatusId: 642
   :fields:
     :url: https://miamioh.teamdynamix.com/SBTDNext/Apps
     Asset ID: ID
