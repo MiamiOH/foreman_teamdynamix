@@ -125,9 +125,10 @@ class TeamdynamixApi
   def evaluate_attributes(attrs, host, asset = {})
     attrs.stringify_keys.each_with_object(asset) do |(k, v), h|
       if k.eql?('Attributes')
+        h['Attributes'] ||= []
         v.each do |attrib|
           attrib_c = attrib.stringify_keys
-          match = (h['Attributes'] || []).find { |attrib_a| attrib_a['Name'] == attrib_c['Name'] }
+          match = h['Attributes'].find { |attrib_a| attrib_a['Name'] == attrib_c['Name'] }
           if match
             match['Value'] = eval_attribute(attrib_c['Value'], host)
           else
