@@ -58,9 +58,10 @@ Example Configuration
 * All attributes are passed to the TeamDynamix API as is, while creating or deleting a TeamDynamix Asset.
 * An asset gets created or deleted with the Foreman Host create or delete life cycle event.
 
-[:api][:create][:Attributes]
+[:api][:create][Attributes]
 * To configure any [Custom Attributes](https://api.teamdynamix.com/TDWebApi/Home/type/TeamDynamix.Api.CustomAttributes.CustomAttribute) for the asset.
-* It must contain expected value for 'id' and 'value' fields.
+* It must contain expected value for 'Name', 'ID' and 'Value' fields.
+* Notice the case of 'Name', 'ID' and 'Value', this must match for correct merging.
 * rest of the fields are optional, check the Custom Attribute's definition for what other fields are updatable.
 * Code evaluation is supported for custom attribute's value.
 
