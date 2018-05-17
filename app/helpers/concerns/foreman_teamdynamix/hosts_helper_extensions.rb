@@ -11,9 +11,9 @@ module ForemanTeamdynamix
 
     def teamdynamix_fields
       td_pane_fields = SETTINGS[:teamdynamix][:fields] || DEFAULT_TD_PANE_FIELDS
-      return [[_('Asset'), 'None Associated']] unless @host.teamdynamix_asset_uid
+      return [[_('Asset'), 'None Associated or error from Team Dynamix']] unless @host.teamdynamix_asset
 
-      get_teamdynamix_asset(@host.teamdynamix_asset_uid)
+      @asset = @host.teamdynamix_asset
 
       # display a link to the asset if url set
       fields = asset_uri(td_pane_fields)
@@ -38,12 +38,6 @@ module ForemanTeamdynamix
       end
     end
 
-    def get_teamdynamix_asset(asset_id)
-      @asset = @host.td_api.get_asset(asset_id)
-    rescue StandardError => e
-      raise "Error getting asset Data from Team Dynamix: #{e.message}"
-    end
-
     def get_nested_attrib_val(nested_attrib)
       nested_attrib_tokens = nested_attrib.split('.')
       parent_attrib = nested_attrib_tokens.first
@@ -52,9 +46,9 @@ module ForemanTeamdynamix
       child_attrib.delete!("'")
       parent_attrib_val = @asset[parent_attrib]
       return '' if parent_attrib_val.blank?
-      nested_attrib_val = parent_attrib_val.select { |attrib| attrib['Name'] == child_attrib }
+      nested_attrib_val = parent_attrib_val.find { |attrib| attrib['Name'] == child_attrib }
       return '' if nested_attrib_val.blank?
-      nested_attrib_val[0]['Value']
+      nested_attrib_val['Value']
     end
   end
 end

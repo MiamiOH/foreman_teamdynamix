@@ -6,47 +6,41 @@ desc <<-DESC.strip_heredoc.squish
   It could be run for all the hosts as:
     * rake teamydynamix:sync:hosts
 
+  Available options:
+    * where => where string for limiting host query
+    * limit => limit for limiting host query
+
 DESC
 namespace :teamdynamix do
   namespace :sync do
     task :hosts => :environment do
-      td_api = TeamdynamixApi.instance
       errors = []
-      creates = 0
-      updates_from_serial_matching = 0
-      update_from_asset_id = 0
+      created = 0
+      updated_search = 0
+      updated_id = 0
 
       console_user = User.find_by(login: 'foreman_console_admin')
       User.current = console_user
 
-      Host.all.each do |h|
-        # if asset exists, update it
-        if td_api.asset_exist?(h.teamdynamix_asset_uid)
-          td_api.update_asset(h)
-          update_from_asset_id += 1
-        else
-          assets = td_api.search_asset(SerialLike: h.name)
-          if assets.empty?
-            asset = td_api.create_asset(h)
-            h.teamdynamix_asset_uid = asset['ID']
-            errors.push("Could not save host: #{h.name} (#{h.id})") unless h.save
-            creates += 1
-          elsif assets.length > 1
-            errors.push("Could not sync: Found more than 1 asset for #{h.name} (#{h.id})")
-          else
-            h.teamdynamix_asset_uid = assets.first['ID']
-            td_api.update_asset(h)
-            errors.push("Could not save host: #{h.name} (#{h.id})") unless h.save
-            updates_from_serial_matching += 1
+      hosts = Host
+      hosts = hosts.where(ENV['where']) if ENV['where']
+      hosts = hosts.limit(ENV['limit']) if ENV['limit']
+
+      hosts.all.each do |h|
+        if h.create_or_update_teamdynamix_asset(true)
+          case h.teamdynamix_asset_status
+          when :created then created += 1
+          when :updated_search then updated_search += 1
+          when :updated_id then updated_id += 1
           end
+        else
+          errors.push("Could not save host: #{h.name} (#{h.id}):\n  #{h.errors.full_messages.join("  \n")}")
         end
         sleep(1.5) # TD only allows 60 api calls per minute
       end
-      puts "Assets created: #{creates}" unless creates.eql?(0)
-      unless updates_from_serial_matching.eql?(0)
-        puts "Assets updated from serial search: #{updates_from_serial_matching}"
-      end
-      puts "Assets updated from ID: #{update_from_asset_id}" unless update_from_asset_id.eql?(0)
+      puts "Assets created: #{created}" unless created.eql?(0)
+      puts "Assets updated from serial search: #{updated_search}" unless updated_search.eql?(0)
+      puts "Assets updated from ID: #{updated_id}" unless updated_id.eql?(0)
       puts "Errors:\n#{errors.join("\n")}" unless errors.empty?
     end
   end

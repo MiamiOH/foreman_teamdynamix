@@ -20,14 +20,11 @@ class TeamdynamixApi
 
   # returns TeamDynamix.Api.Assets.Asset
   def get_asset(asset_id)
+    return nil unless asset_id
     uri = URI.parse("#{API_URL}/#{APP_ID}/assets/#{asset_id}")
     rest(:get, uri)
-  end
-
-  def asset_exist?(asset_id)
-    get_asset(asset_id).present?
   rescue RuntimeError
-    false
+    nil
   end
 
   def create_asset(host)
@@ -40,9 +37,9 @@ class TeamdynamixApi
     rest(:post, uri, update_asset_payload(host))
   end
 
-  def retire_asset(asset_id)
-    uri = URI.parse("#{API_URL}/#{APP_ID}/assets/#{asset_id}")
-    rest(:post, uri, retire_asset_payload(asset_id))
+  def retire_asset(host)
+    uri = URI.parse("#{API_URL}/#{APP_ID}/assets/#{host.teamdynamix_asset_uid}")
+    rest(:post, uri, retire_asset_payload(host))
   end
 
   # Gets a list of assets matching the specified criteria. (IEnumerable(Of TeamDynamix.Api.Assets.Asset))
@@ -106,26 +103,38 @@ class TeamdynamixApi
     end
   end
 
-  def retire_asset_payload(asset_id)
-    asset = get_asset(asset_id)
-    asset.merge(API_CONFIG[:delete].stringify_keys)
-  end
-
   def create_asset_payload(host)
     ensure_configured_create_params
-    default_attrs = { AppID: APP_ID,
-                      SerialNumber: host.name,
-                      Name: host.fqdn }
-    create_attrs = evaluate_attributes(API_CONFIG[:create], host)
-    default_attrs.merge(create_attrs)
+    default_attrs = { 'AppID' => APP_ID,
+                      'SerialNumber' => host.name,
+                      'Name' => host.fqdn }
+    evaluate_attributes(API_CONFIG[:create], host, default_attrs)
   end
 
-  def evaluate_attributes(create_attrs, host)
-    create_attrs.symbolize_keys.each_with_object({}) do |(k, v), h|
-      if k.eql?(:Attributes)
-        h[:Attributes] = v.each_with_object([]) do |attribute, a|
-          a << attribute.transform_keys(&:downcase)
-          a.last['value'] = eval_attribute(a.last['value'], host)
+  def update_asset_payload(host)
+    default_attrs = { 'AppID' => APP_ID,
+                      'SerialNumber' => host.name,
+                      'Name' => host.fqdn }
+    evaluate_attributes(API_CONFIG[:create], host, host.teamdynamix_asset.merge(default_attrs))
+  end
+
+  def retire_asset_payload(host)
+    evaluate_attributes(API_CONFIG[:delete], host, host.teamdynamix_asset)
+  end
+
+  def evaluate_attributes(attrs, host, asset = {})
+    attrs.stringify_keys.each_with_object(asset) do |(k, v), h|
+      if k.eql?('Attributes')
+        h['Attributes'] ||= []
+        v.each do |attrib|
+          attrib_c = attrib.stringify_keys
+          match = h['Attributes'].find { |attrib_a| attrib_a['Name'] == attrib_c['Name'] }
+          if match
+            match['Value'] = eval_attribute(attrib_c['Value'], host)
+          else
+            attrib_c['Value'] = eval_attribute(attrib_c['Value'], host)
+            h['Attributes'] << attrib_c
+          end
         end
       else
         h[k] = eval_attribute(v, host)
@@ -140,21 +149,16 @@ class TeamdynamixApi
   end
 
   def must_configure_create_params
-    [:StatusID]
+    ['StatusID']
   end
 
   def valid_auth_token?(token)
     token.match(/^[a-zA-Z0-9\.\-\_]*$/)
   end
 
-  def update_asset_payload(host)
-    asset = get_asset(host.teamdynamix_asset_uid)
-    asset.merge(create_asset_payload(host))
-  end
-
   def ensure_configured_create_params
     must_configure_create_params.each do |must_configure_param|
-      unless API_CONFIG[:create].include?(must_configure_param)
+      unless API_CONFIG[:create].include?(must_configure_param) || API_CONFIG[:create].include?(must_configure_param.to_sym)
         raise("#{must_configure_param} is required. Set it as a configuration item.")
       end
     end

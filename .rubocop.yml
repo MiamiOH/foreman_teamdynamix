@@ -14,16 +14,16 @@ Metrics/MethodLength:
 
 Metrics/AbcSize:
   # Ruduce this... Max: 15
-  Max: 22
+  Max: 23
 
 Metrics/ClassLength:
-  Max: 130
+  Max: 131
 
 Metrics/CyclomaticComplexity:
   Max: 7
 
 Metrics/LineLength:
-  Max: 121 # TODO: discuss and set this
+  Max: 125 # TODO: discuss and set this
   Exclude:
     - 'test/**/*.rb'
 
@@ -34,7 +34,7 @@ Style/HashSyntax:
 Style/FrozenStringLiteralComment:
   Enabled: false
 
-Style/BlockLength:
+Metrics/BlockLength:
   Exclude:
     - 'Rakefile'
     - '**/*.rake'
