@@ -105,11 +105,17 @@ class TeamdynamixApi
 
   def create_asset_payload(host)
     ensure_configured_create_params
-    evaluate_attributes(API_CONFIG[:create], host)
+    default_attrs = { 'AppID' => APP_ID,
+                      'SerialNumber' => host.name,
+                      'Name' => host.fqdn }
+    evaluate_attributes(API_CONFIG[:create], host, default_attrs)
   end
 
   def update_asset_payload(host)
-    evaluate_attributes(API_CONFIG[:create], host, host.teamdynamix_asset)
+    default_attrs = { 'AppID' => APP_ID,
+                      'SerialNumber' => host.name,
+                      'Name' => host.fqdn }
+    evaluate_attributes(API_CONFIG[:create], host, host.teamdynamix_asset.merge(default_attrs))
   end
 
   def retire_asset_payload(host)
@@ -117,11 +123,7 @@ class TeamdynamixApi
   end
 
   def evaluate_attributes(attrs, host, asset = {})
-    default_attrs = { 'AppID' => APP_ID,
-                      'SerialNumber' => host.name,
-                      'Name' => host.fqdn }
-
-    attrs.stringify_keys.each_with_object(asset.merge(default_attrs)) do |(k, v), h|
+    attrs.stringify_keys.each_with_object(asset) do |(k, v), h|
       if k.eql?('Attributes')
         v.each do |attrib|
           attrib_c = attrib.stringify_keys

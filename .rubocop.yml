@@ -14,7 +14,7 @@ Metrics/MethodLength:
 
 Metrics/AbcSize:
   # Ruduce this... Max: 15
-  Max: 22
+  Max: 23
 
 Metrics/ClassLength:
   Max: 130

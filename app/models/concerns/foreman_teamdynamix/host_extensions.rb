@@ -22,11 +22,11 @@ module ForemanTeamdynamix
       if search && !@teamdynamix_asset
         assets = td_api.search_asset(SerialLike: name)
         if assets.length == 1
-          @teamdynamix_asset = assets.first
+          @teamdynamix_asset = td_api.get_asset(assets.first['ID'])
           self.teamdynamix_asset_uid = teamdynamix_asset['ID']
           @teamdynamix_asset_status = :updated_search
         elsif assets.length > 1
-          errors.add(:base, _('Search for asset in TeamDynamix failed: Found more than 1 matching asset'))
+          errors.add(:base, _("Search for asset in TeamDynamix failed: Found #{assets.length} matching assets"))
         end
       end
 
