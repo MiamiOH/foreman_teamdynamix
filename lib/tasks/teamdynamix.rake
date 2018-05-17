@@ -34,7 +34,7 @@ namespace :teamdynamix do
           when :updated_id then updated_id += 1
           end
         else
-          errors.push("Could not save host: #{h.name} (#{h.id}):\n  #{h.errors.full_messages.join("  \n")}")
+          errors.push("Could not save host: #{h.name} (#{h.id}):\n  #{h.errors.full_messages.join("\n  ")}")
         end
         sleep(1.5) # TD only allows 60 api calls per minute
       end
