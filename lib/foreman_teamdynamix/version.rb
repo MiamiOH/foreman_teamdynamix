@@ -1,3 +1,3 @@
 module ForemanTeamdynamix
-  VERSION = '0.5.0'.freeze
+  VERSION = '1.0.1'.freeze
 end

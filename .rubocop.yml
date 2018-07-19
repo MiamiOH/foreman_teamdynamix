@@ -22,7 +22,7 @@ Metrics/ClassLength:
 Metrics/CyclomaticComplexity:
   Max: 7
 
-Metrics/LineLength:
+Layout/LineLength:
   Max: 125 # TODO: discuss and set this
   Exclude:
     - 'test/**/*.rb'
