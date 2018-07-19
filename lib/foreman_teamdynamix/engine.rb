@@ -20,12 +20,9 @@ module ForemanTeamdynamix
 
         # Add permissions
         security_block :foreman_teamdynamix do
-          ps = permission :view_hosts,
-                          { :hosts => [:teamdynamix] },
-                          :resource_type => 'Host'
-          pn = ps.pop
-          po = ps.detect { |p| p.name == :view_hosts }
-          po.actions << pn.actions.first
+          permission :view_teamdynamix,
+                     { :hosts => [:teamdynamix] },
+                     :resource_type => 'Host'
         end
       end
     end
