@@ -6,8 +6,8 @@ module ForemanTeamdynamix
     def teamdynamix
       find_resource
       render partial: 'foreman_teamdynamix/hosts/teamdynamix', :locals => { :host => @host }
-    rescue ActionView::Template::Error => exception
-      process_ajax_error exception, 'fetch teamdynamix tab information'
+    rescue ActionView::Template::Error => e
+      process_ajax_error e, 'fetch teamdynamix tab information'
     end
 
     private

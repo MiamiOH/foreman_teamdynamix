@@ -29,13 +29,11 @@ module ForemanTeamdynamix
 
     # Include concerns in this config.to_prepare block
     config.to_prepare do
-      begin
-        HostsHelper.send(:include, ForemanTeamdynamix::HostsHelperExtensions)
-        ::HostsController.send(:include, ForemanTeamdynamix::HostsControllerExtensions)
-        ::Host::Managed.send(:include, ForemanTeamdynamix::HostExtensions)
-      rescue StandardError => e
-        Rails.logger.warn "ForemanTeamdynamix: skipping engine hook (#{e})"
-      end
+      HostsHelper.include ForemanTeamdynamix::HostsHelperExtensions
+      ::HostsController.include ForemanTeamdynamix::HostsControllerExtensions
+      ::Host::Managed.include ForemanTeamdynamix::HostExtensions
+    rescue StandardError => e
+      Rails.logger.warn "ForemanTeamdynamix: skipping engine hook (#{e})"
     end
 
     initializer 'foreman_teamdynamix.register_gettext', after: :load_config_initializers do |_app|

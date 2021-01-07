@@ -5,12 +5,15 @@ class TeamdynamixApi
   if SETTINGS[:teamdynamix].blank?
     raise('Missing configurations for the plugin see https://github.com/MiamiOH/foreman_teamdynamix')
   end
+
   API_CONFIG = SETTINGS[:teamdynamix][:api]
 
   raise('Missing Team Dynamix Api ID in plugin settings') if API_CONFIG[:appId].blank?
+
   APP_ID = API_CONFIG[:appId]
 
   raise('Missing Team Dynamix API URL in plugin settings') if API_CONFIG[:url].blank?
+
   API_URL = API_CONFIG[:url]
 
   def initialize
@@ -21,6 +24,7 @@ class TeamdynamixApi
   # returns TeamDynamix.Api.Assets.Asset
   def get_asset(asset_id)
     return nil unless asset_id
+
     uri = URI.parse("#{API_URL}/#{APP_ID}/assets/#{asset_id}")
     rest(:get, uri)
   rescue RuntimeError
@@ -153,7 +157,7 @@ class TeamdynamixApi
   end
 
   def valid_auth_token?(token)
-    token.match(/^[a-zA-Z0-9\.\-\_]*$/)
+    token.match(/^[a-zA-Z0-9.\-_]*$/)
   end
 
   def ensure_configured_create_params

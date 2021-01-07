@@ -13,7 +13,9 @@ class HostsHelperExtensionsTest < ActiveSupport::TestCase
   describe '#teamdynamix_fields' do
     let(:sample_asset) { td_api.get_asset }
     let(:default_fields) { [sample_asset_uri] }
-    let(:direct_attribs_config) { { 'Asset ID' => 'ID', 'Owner' => 'OwningCustomerName', 'Parent Asset' => 'ParentID' } }
+    let(:direct_attribs_config) do
+      { 'Asset ID' => 'ID', 'Owner' => 'OwningCustomerName', 'Parent Asset' => 'ParentID' }
+    end
     let(:direct_attribs_fields) { get_direct_asset_attribs_val(direct_attribs_config) }
     let(:expected_fields) { default_fields + direct_attribs_fields }
     before do
@@ -56,7 +58,7 @@ class HostsHelperExtensionsTest < ActiveSupport::TestCase
 
     test 'settings title is not present: return default title' do
       SETTINGS[:teamdynamix][:title] = nil
-      assert_equal teamdynamix_title, 'Team Dynamix'
+      assert_equal('Team Dynamix', teamdynamix_title)
       SETTINGS[:teamdynamix][:title] = title_orig
     end
   end

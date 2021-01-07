@@ -7,7 +7,7 @@ class HostsControllerTest < ActionController::TestCase
   before do
     Host::Managed.any_instance.stubs(:td_api).returns(td_api)
   end
-  # rubocop:disable Style/StringLiterals, HttpPositionalArguments
+  # rubocop:disable Style/StringLiterals, Rails/HttpPositionalArguments
   describe 'Given host exist as an asset in TeamDynamix' do
     describe 'when TeamDynamix asset attributes are configured' do
       describe 'GET hosts/show' do
@@ -15,9 +15,10 @@ class HostsControllerTest < ActionController::TestCase
           get :show, { :id => host.name }, set_session_user
           assert_includes response.headers['Content-Type'], 'text/html'
           assert_includes response.body, "<ul id=\"myTab\""
-          assert_equal response.status, 200
+          assert_equal(200, response.status)
           assert_includes response.body, "<li><a href=\"#teamdynamix\" data-toggle=\"tab\">#{td_tab_title}</a></li>"
-          assert_includes response.body, "<div id=\"teamdynamix\" class=\"tab-pane\" data-ajax-url=\"/hosts/#{host.name}/teamdynamix\" data-on-complete=\"onContentLoad\">"
+          assert_includes response.body,
+                          "<div id=\"teamdynamix\" class=\"tab-pane\" data-ajax-url=\"/hosts/#{host.name}/teamdynamix\" data-on-complete=\"onContentLoad\">"
         end
         test 'TeamDynamix tab contains configured asset attributes' do
           skip
@@ -27,5 +28,5 @@ class HostsControllerTest < ActionController::TestCase
       end
     end
   end
-  # rubocop:enable Style/StringLiterals, HttpPositionalArguments
+  # rubocop:enable Style/StringLiterals, Rails/HttpPositionalArguments
 end
