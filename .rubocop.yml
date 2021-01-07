@@ -1,5 +1,14 @@
+require:
+  - rubocop-rails
+
+inherit_from: .rubocop_todo.yml
+
 Rails:
   Enabled: true
+
+AllCops:
+  TargetRubyVersion: 2.5
+  NewCops: enable
 
 # Don't enforce documentation
 Style/Documentation:
@@ -21,11 +30,6 @@ Metrics/ClassLength:
 
 Metrics/CyclomaticComplexity:
   Max: 7
-
-Metrics/LineLength:
-  Max: 125 # TODO: discuss and set this
-  Exclude:
-    - 'test/**/*.rb'
 
 # Support both ruby19 and hash_rockets
 Style/HashSyntax:

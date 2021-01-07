@@ -18,5 +18,7 @@ Gem::Specification.new do |s|
 
   s.add_dependency 'deface', '< 2.0'
   s.add_development_dependency 'rubocop'
+  s.add_development_dependency 'rubocop-rails'
   s.add_development_dependency 'webmock'
+  s.required_ruby_version = '>= 2.5.0'
 end

@@ -1,4 +1,4 @@
-desc <<-DESC.strip_heredoc.squish
+desc <<~DESC.squish
   Scans existing hosts and creates or updates the asset in TeamDynamix.
     * If found, update the fields in the TeamDynamix asset.
     * If not found, create a TeamDynamix asset with desired fields.

@@ -11,7 +11,7 @@ namespace :test do
 end
 
 namespace :foreman_teamdynamix do
-  task :rubocop do
+  task rubocop: :environment do
     begin
       require 'rubocop/rake_task'
       RuboCop::RakeTask.new(:rubocop_foreman_teamdynamix) do |task|

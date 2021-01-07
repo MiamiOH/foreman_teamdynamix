@@ -28,7 +28,7 @@ end
 def sample_asset_uri
   api_url = SETTINGS[:teamdynamix][:api][:url]
   asset_uri = api_url.split('api').first + sample_asset['Uri']
-  [_('URI'), link_to(sample_asset['Uri'], asset_uri, target: '_blank')]
+  [_('URI'), link_to(sample_asset['Uri'], asset_uri, target: '_blank', rel: 'noopener')]
 end
 
 require 'webmock/minitest'

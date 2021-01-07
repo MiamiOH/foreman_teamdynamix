@@ -8,17 +8,19 @@ class TeamdynamixApiTest < ActiveSupport::TestCase
   let(:api_url) { api_config[:url] }
   let(:host) { FactoryBot.build(:host, :managed) }
   let(:auth_payload) { { username: api_config[:username], password: api_config[:password] }.to_json }
-  let(:dummy_token) { 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1bmlxdWVfbmFtZSI6InR5YWdpbkBtaWFtaW9oLmVkdSIsImlzcyI6IlREIiwiYXVkIjoiaHR0cHM6Ly93d3cudGVhbWR5bmFtaXguY29tLyIsImV4cCI6MTUxNzA2OTU1OSwibmJmIjoxNTE2OTgzMTU5fQ.PkvKbYQCV-hY7_ni4-Zg3qJARBagSzz99fclBYyxxas' }
+  let(:dummy_token) do
+    'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1bmlxdWVfbmFtZSI6InR5YWdpbkBtaWFtaW9oLmVkdSIsImlzcyI6IlREIiwiYXVkIjoiaHR0cHM6Ly93d3cudGVhbWR5bmFtaXguY29tLyIsImV4cCI6MTUxNzA2OTU1OSwibmJmIjoxNTE2OTgzMTU5fQ.PkvKbYQCV-hY7_ni4-Zg3qJARBagSzz99fclBYyxxas'
+  end
   let(:sample_asset) { FakeTeamdynamixApi.new.get_asset }
   let(:sample_asset_id) { sample_asset['ID'].to_s }
   let(:host_name) { 'delete.foreman_teamdynamix.com' }
-  let(:get_asset_path) { api_url + '/' + app_id + '/assets/' + sample_asset_id }
+  let(:get_asset_path) { "#{api_url}/#{app_id}/assets/#{sample_asset_id}" }
   let(:create_status_id) { 641 }
   let(:custom_attributes) do
     [{ 'name' => 'mu.ci.Lifecycle Status', 'id' => 11_634, 'value' => '26193' },
      { 'name' => 'mu.ci.Description', 'id' => 11_632, 'value' => 'Foreman host created by ForemanTeamdynamix plugin' }]
   end
-  let(:create_path) { api_url + '/' + app_id + '/assets' }
+  let(:create_path) { "#{api_url}/#{app_id}/assets" }
   let(:create_payload) do
     { AppID: app_id,
       SerialNumber: host_name,
@@ -27,7 +29,7 @@ class TeamdynamixApiTest < ActiveSupport::TestCase
       Attributes: custom_attributes }
   end
   before do
-    stub_request(:post, api_url + '/auth')
+    stub_request(:post, "#{api_url}/auth")
       .with(body: auth_payload,
             headers: { 'Content-Type' => 'application/json' })
       .to_return(status: 200, body: dummy_token)
@@ -45,7 +47,7 @@ class TeamdynamixApiTest < ActiveSupport::TestCase
     context 'Valid Request' do
       before do
         stub_request(:post, update_path)
-          .with(headers: { 'Authorization' => 'Bearer ' + dummy_token,
+          .with(headers: { 'Authorization' => "Bearer #{dummy_token}",
                            'Content-Type' => 'application/json' },
                 body: update_payload)
           .to_return(status: 200, body: sample_asset.to_json)
@@ -67,10 +69,10 @@ class TeamdynamixApiTest < ActiveSupport::TestCase
     end
     describe 'valid request' do
       let(:retired_asset) { sample_asset.merge('StatusID' => retire_status_id) }
-      let(:retire_path) { api_url + '/' + app_id + '/assets/' + sample_asset_id }
+      let(:retire_path) { "#{api_url}/#{app_id}/assets/#{sample_asset_id}" }
       before do
         stub_request(:post, retire_path)
-          .with(headers: { 'Authorization' => 'Bearer ' + dummy_token,
+          .with(headers: { 'Authorization' => "Bearer #{dummy_token}",
                            'Content-Type' => 'application/json' })
           .to_return(status: 200, body: retired_asset.to_json)
       end
@@ -91,7 +93,7 @@ class TeamdynamixApiTest < ActiveSupport::TestCase
     context 'Valid Request' do
       before do
         stub_request(:post, create_path)
-          .with(headers: { 'Authorization' => 'Bearer ' + dummy_token,
+          .with(headers: { 'Authorization' => "Bearer #{dummy_token}",
                            'Content-Type' => 'application/json' },
                 body: create_payload)
           .to_return(status: 200, body: sample_asset.to_json)
@@ -112,7 +114,7 @@ class TeamdynamixApiTest < ActiveSupport::TestCase
       # rubocop:enable Style/StringLiterals
       before do
         stub_request(:post, create_path)
-          .with(headers: { 'Authorization' => 'Bearer ' + dummy_token,
+          .with(headers: { 'Authorization' => "Bearer #{dummy_token}",
                            'Content-Type' => 'application/json' },
                 body: create_payload)
           .to_return(status: 400, body: error_body)
@@ -138,7 +140,7 @@ class TeamdynamixApiTest < ActiveSupport::TestCase
       let(:error) { { status: "403", msg: "", body: error_body }.to_json }
       # rubocop:enable Style/StringLiterals
       before do
-        stub_request(:post, api_url + '/auth')
+        stub_request(:post, "#{api_url}/auth")
           .with(body: auth_payload)
           .to_return(status: 403, body: error_body)
       end
@@ -154,7 +156,7 @@ class TeamdynamixApiTest < ActiveSupport::TestCase
     context 'Valid Request' do
       before do
         stub_request(:get, get_asset_path)
-          .with(headers: { 'Authorization' => 'Bearer ' + dummy_token })
+          .with(headers: { 'Authorization' => "Bearer #{dummy_token}" })
           .to_return(status: 200, body: sample_asset.to_json)
       end
       it 'returns asset json' do
