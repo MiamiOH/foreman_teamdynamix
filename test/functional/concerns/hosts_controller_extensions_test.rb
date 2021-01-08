@@ -14,7 +14,7 @@ class HostsControllerTest < ActionController::TestCase
         test 'loads the TeamDynamix tab' do
           get :show, { :id => host.name }, set_session_user
           assert_includes response.headers['Content-Type'], 'text/html'
-          assert_includes response.body, "<ul id=\"myTab\""
+          assert_includes response.body, "<ul id=\"host-show-tabs\""
           assert_equal(200, response.status)
           assert_includes response.body, "<li><a href=\"#teamdynamix\" data-toggle=\"tab\">#{td_tab_title}</a></li>"
           assert_includes response.body,
