@@ -37,12 +37,12 @@ module ForemanTeamdynamix
       if teamdynamix_asset(true)
         td_api.update_asset(self)
         @teamdynamix_asset_status ||= :updated_id
-        self.save if save
+        self.save(validate: false) if save
       elsif errors.empty?
         @teamdynamix_asset = td_api.create_asset(self)
         self.teamdynamix_asset_uid = teamdynamix_asset['ID']
         @teamdynamix_asset_status = :created
-        self.save if save
+        self.save(validate: false) if save
       else
         false
       end
