@@ -19,7 +19,7 @@ namespace :teamdynamix do
       updated_search = 0
       updated_id = 0
 
-      console_user = User.find_by(login: 'foreman_console_admin')
+      console_user = User.new(login: 'foreman_console_admin', firstname: 'Console', lastname: 'Admin', admin: true, auth_source_id: 2, lower_login: 'foreman_console_admin', disabled: false)
       User.current = console_user
 
       hosts = Host
