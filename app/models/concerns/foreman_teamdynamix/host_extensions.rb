@@ -20,7 +20,7 @@ module ForemanTeamdynamix
       @teamdynamix_asset ||= td_api.get_asset(teamdynamix_asset_uid)
 
       if search && !@teamdynamix_asset
-        assets = td_api.search_asset(SerialLike: name)
+        assets = td_api.search_asset(SerialLike: facts['serialnumber'])
         if assets.length == 1
           @teamdynamix_asset = td_api.get_asset(assets.first['ID'])
           self.teamdynamix_asset_uid = teamdynamix_asset['ID']

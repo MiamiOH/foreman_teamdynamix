@@ -13,6 +13,7 @@ class TeamdynamixApiTest < ActiveSupport::TestCase
   end
   let(:sample_asset) { FakeTeamdynamixApi.new.get_asset }
   let(:sample_asset_id) { sample_asset['ID'].to_s }
+  let(:serial_number) { '0123456789' }
   let(:host_name) { 'delete.foreman_teamdynamix.com' }
   let(:get_asset_path) { "#{api_url}/#{app_id}/assets/#{sample_asset_id}" }
   let(:create_status_id) { 641 }
@@ -23,7 +24,7 @@ class TeamdynamixApiTest < ActiveSupport::TestCase
   let(:create_path) { "#{api_url}/#{app_id}/assets" }
   let(:create_payload) do
     { AppID: app_id,
-      SerialNumber: host_name,
+      SerialNumber: serial_number,
       Name: host_name,
       StatusID: create_status_id,
       Attributes: custom_attributes }
@@ -54,7 +55,7 @@ class TeamdynamixApiTest < ActiveSupport::TestCase
       end
       it 'successfully creates an asset and return it' do
         asset = subject.update_asset(host)
-        assert_equal(asset['SerialNumber'], host.name)
+        assert_equal(asset['SerialNumber'], host.facts['serialnumber'])
         assert_equal(asset['AppID'].to_s, app_id.to_s)
         assert_equal(asset['StatusID'], create_status_id)
       end
@@ -101,7 +102,7 @@ class TeamdynamixApiTest < ActiveSupport::TestCase
       it 'successfully creates an asset and return it' do
         asset = subject.create_asset(host)
         assert_not_nil(asset['ID'])
-        assert_equal(asset['SerialNumber'], host.name)
+        assert_equal(asset['SerialNumber'], host.facts['serialnumber'])
         assert_equal(asset['AppID'].to_s, app_id.to_s)
         assert_equal(asset['StatusID'], create_status_id)
       end

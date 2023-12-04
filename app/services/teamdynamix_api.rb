@@ -110,15 +110,15 @@ class TeamdynamixApi
   def create_asset_payload(host)
     ensure_configured_create_params
     default_attrs = { 'AppID' => APP_ID,
-                      'SerialNumber' => host.name,
-                      'Name' => host.fqdn }
+                      'SerialNumber' => host.facts['serialnumber'],
+                      'Name' => host.name }
     evaluate_attributes(API_CONFIG[:create], host, default_attrs)
   end
 
   def update_asset_payload(host)
     default_attrs = { 'AppID' => APP_ID,
-                      'SerialNumber' => host.name,
-                      'Name' => host.fqdn }
+                      'SerialNumber' => host.facts['serialnumber'],
+                      'Name' => host.name }
     evaluate_attributes(API_CONFIG[:create], host, host.teamdynamix_asset.merge(default_attrs))
   end
 

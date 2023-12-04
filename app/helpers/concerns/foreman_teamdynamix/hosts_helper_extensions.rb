@@ -32,7 +32,7 @@ module ForemanTeamdynamix
     def asset_uri(td_pane_fields)
       if td_pane_fields[:url]
         uri = "#{td_pane_fields[:url]}/#{@asset['AppID']}/Assets/AssetDet?AssetID=#{@asset['ID']}"
-        [[_('URI'), link_to(@asset['SerialNumber'], uri, target: '_blank', rel: 'noopener')]]
+        [[_('URI'), link_to(@asset['Name'], uri, target: '_blank', rel: 'noopener')]]
       else
         []
       end
